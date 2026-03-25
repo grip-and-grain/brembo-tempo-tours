@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-gold: #c8a96e;
+  --color-brand-dark: #0d0d0d;
+  --color-brand-mid: #1a1a1a;
+  --color-brand-surface: #111111;
+
+  --font-family-display: "Playfair Display", Georgia, serif;
+  --font-family-sans: "Inter", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background: var(--color-brand-dark);
+  color: #fff;
+}

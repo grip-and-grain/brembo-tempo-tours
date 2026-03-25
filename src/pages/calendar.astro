@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../i18n';
+
+const lang = 'sv';
+const t = useTranslations(lang);
+
+const allRoutes = await getCollection('routes', ({ data }) => data.published);
+
+const monthNamesSv = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
+const weekdaysSv = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+
+const diffLabel: Record<string, string> = { lätt: 'Lätt', medel: 'Medel', krävande: 'Krävande' };
+const diffColor: Record<string, string> = { lätt: 'text-green-400', medel: 'text-yellow-400', krävande: 'text-red-400' };
+
+function spotsColor(left: number): string {
+  if (left === 0) return 'text-white/20';
+  if (left <= 2) return 'text-red-400';
+  if (left <= 4) return 'text-yellow-400';
+  return 'text-green-400';
+}
+
+type ProcessedDate = {
+  dateStr: string;
+  dayNum: number;
+  weekday: string;
+  spots: number;
+  spotsLeft: number;
+  routeTitle: string;
+  routeSlug: string;
+  difficulty: string;
+  diffLabel: string;
+  diffColor: string;
+  distance: number;
+  duration: string;
+  isSoldOut: boolean;
+  spotsColorClass: string;
+  monthKey: string;
+};
+
+const allDates: ProcessedDate[] = allRoutes
+  .flatMap(r => r.data.dates.map(d => {
+    const date = new Date(d.date);
+    return {
+      dateStr: d.date,
+      dayNum: date.getDate(),
+      weekday: weekdaysSv[date.getDay()],
+      spots: d.spots,
+      spotsLeft: d.spotsLeft,
+      routeTitle: r.data.title,
+      routeSlug: r.data.slug,
+      difficulty: r.data.difficulty,
+      diffLabel: diffLabel[r.data.difficulty],
+      diffColor: diffColor[r.data.difficulty],
+      distance: r.data.distance,
+      duration: r.data.duration,
+      isSoldOut: d.spotsLeft === 0,
+      spotsColorClass: spotsColor(d.spotsLeft),
+      monthKey: d.date.slice(0, 7),
+    };
+  }))
+  .sort((a, b) => new Date(a.dateStr).getTime() - new Date(b.dateStr).getTime());
+
+// Group by month
+const byMonth = new Map<string, ProcessedDate[]>();
+for (const d of allDates) {
+  if (!byMonth.has(d.monthKey)) byMonth.set(d.monthKey, []);
+  byMonth.get(d.monthKey)!.push(d);
+}
+---
+
+<BaseLayout title={t.nav.calendar} lang={lang} activeNav="calendar">
+
+  <div class="bg-brand-dark px-20 pt-48 pb-14">
+    <div class="flex items-center gap-4 mb-4">
+      <div class="w-8 h-px bg-brand-gold"></div>
+      <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.calendar.eyebrow}</span>
+    </div>
+    <h1 class="font-display text-[4rem] font-black leading-none">{t.calendar.title}</h1>
+  </div>
+
+  <div class="px-20 pb-20 bg-brand-dark">
+    {Array.from(byMonth.entries()).map(([monthKey, dates]) => {
+      const [year, month] = monthKey.split('-').map(Number);
+      return (
+        <div class="mb-12">
+          <div class="font-display text-[3rem] font-black text-white/[0.04] leading-none">{monthNamesSv[month - 1]}</div>
+          <div class="flex items-center gap-6 mb-6 -mt-10">
+            <span class="text-[0.65rem] font-bold tracking-[0.25em] uppercase text-brand-gold whitespace-nowrap">{monthNamesSv[month - 1]} {year}</span>
+            <div class="flex-1 h-px bg-white/[0.08]"></div>
+          </div>
+
+          {dates.map(d => (
+            <div
+              class:list={['grid items-center gap-10 py-7 border-b border-white/[0.06]', d.isSoldOut && 'opacity-40']}
+              style="grid-template-columns: 80px 1fr auto"
+            >
+              <div class="text-center">
+                <div class="font-display text-[2.5rem] font-black text-white leading-none">{d.dayNum}</div>
+                <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/25">{d.weekday}</div>
+              </div>
+              <div>
+                <a href={`/routes/${d.routeSlug}`} class="font-display text-[1.2rem] font-bold text-white hover:text-brand-gold transition-colors">{d.routeTitle}</a>
+                <div class="flex gap-4 text-[0.72rem] text-white/35 mt-1">
+                  <span>{d.distance} km</span>
+                  <span>·</span>
+                  <span>{d.duration}</span>
+                  <span>·</span>
+                  <span class={d.diffColor}>{d.diffLabel}</span>
+                </div>
+              </div>
+              <div class="text-right min-w-[180px]">
+                {d.isSoldOut && (
+                  <Fragment>
+                    <div class="text-[0.7rem] text-white/20 mb-3">{t.calendar.soldOut}</div>
+                    <span class="inline-block border border-white/10 text-white/20 text-[0.65rem] tracking-[0.15em] uppercase px-7 py-3">{t.calendar.soldOut}</span>
+                  </Fragment>
+                )}
+                {!d.isSoldOut && (
+                  <Fragment>
+                    <div class:list={['text-[0.7rem] mb-3', d.spotsColorClass]}>{d.spotsLeft} av {d.spots} platser kvar</div>
+                    <a href={`/contact?route=${d.routeSlug}&date=${d.dateStr}`} class="inline-block bg-brand-gold text-black text-[0.65rem] font-bold tracking-[0.18em] uppercase px-7 py-3 hover:bg-white transition-colors">{t.calendar.signup}</a>
+                  </Fragment>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    })}
+  </div>
+
+</BaseLayout>

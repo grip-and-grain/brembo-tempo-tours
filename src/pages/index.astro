@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../i18n';
+
+const lang = 'sv';
+const t = useTranslations(lang);
+
+const allRoutes = await getCollection('routes', ({ data }) => data.published);
+
+const upcomingDates = allRoutes
+  .flatMap(r => r.data.dates.map(d => ({ ...d, routeTitle: r.data.title, routeSlug: r.data.slug })))
+  .filter(d => new Date(d.date) >= new Date())
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  .slice(0, 3);
+
+const monthNames = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+---
+
+<BaseLayout title="Hem" lang={lang}>
+
+  <!-- Hero -->
+  <section class="relative h-screen min-h-[700px] overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547549082-4bc09bb2a596?w=1600&q=85')] bg-center bg-cover"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(105deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%)"></div>
+    <div class="relative z-10 h-full flex flex-col justify-end px-20 pb-20">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-10 h-px bg-brand-gold"></div>
+        <span class="text-[0.65rem] tracking-[0.25em] uppercase text-brand-gold">{t.home.region}</span>
+      </div>
+      <h1 class="font-display font-black leading-[0.92] tracking-tight mb-8" style="font-size: clamp(3.5rem, 7vw, 7rem)">
+        {t.home.heroTitle1}<br />
+        {t.home.heroTitle2} <em class="italic text-brand-gold">{t.home.heroTitleEm}</em>
+      </h1>
+      <p class="text-white/60 font-light text-lg leading-relaxed max-w-[26rem] mb-12">{t.home.heroSub}</p>
+      <div class="flex gap-4">
+        <a href="/routes" class="inline-flex items-center bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase px-10 py-4 hover:bg-white transition-colors">
+          {t.home.ctaRoutes}
+        </a>
+        <a href="/calendar" class="inline-flex items-center border border-white/25 text-white/80 text-[0.7rem] font-semibold tracking-[0.2em] uppercase px-10 py-4 hover:border-brand-gold hover:text-brand-gold transition-colors">
+          {t.home.ctaDates}
+        </a>
+      </div>
+    </div>
+    <div class="absolute right-12 bottom-12 flex flex-col items-center gap-2 text-[0.6rem] tracking-[0.2em] uppercase text-white/35">
+      Scrolla
+      <div class="w-px h-12" style="background: linear-gradient(to bottom, rgba(200,169,110,0.6), transparent)"></div>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <div class="bg-brand-gold grid grid-cols-3">
+    <div class="px-10 py-6 border-r border-black/[0.12]">
+      <div class="font-display text-[2rem] font-bold text-black leading-none">{allRoutes.length}</div>
+      <div class="text-[0.65rem] font-semibold tracking-[0.15em] uppercase text-black/55 mt-1">{t.home.statRoutes}</div>
+    </div>
+    <div class="px-10 py-6 border-r border-black/[0.12]">
+      <div class="font-display text-[2rem] font-bold text-black leading-none">8</div>
+      <div class="text-[0.65rem] font-semibold tracking-[0.15em] uppercase text-black/55 mt-1">{t.home.statRiders}</div>
+    </div>
+    <div class="px-10 py-6">
+      <div class="font-display text-[2rem] font-bold text-black leading-none">180–310</div>
+      <div class="text-[0.65rem] font-semibold tracking-[0.15em] uppercase text-black/55 mt-1">{t.home.statKm}</div>
+    </div>
+  </div>
+
+  <!-- Routes grid -->
+  <section class="bg-brand-dark px-20 pt-20">
+    <div class="flex items-center gap-4 mb-5">
+      <div class="w-8 h-px bg-brand-gold"></div>
+      <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.sectionRoutes}</span>
+    </div>
+    <h2 class="font-display text-[2.75rem] font-bold mb-10">{t.home.chooseRoute}</h2>
+  </section>
+  <div class="grid grid-cols-2 gap-[2px] bg-black">
+    {allRoutes.slice(0, 1).map((route) => {
+      const diffClass = { lätt: 'bg-green-500/10 text-green-400 border border-green-500/25', medel: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/25', krävande: 'bg-red-500/10 text-red-400 border border-red-500/25' }[route.data.difficulty];
+      return (
+        <a href={`/routes/${route.data.slug}`} class="group relative overflow-hidden row-span-2">
+          <img src={route.data.coverImage} alt={route.data.title} class="w-full object-cover brightness-[0.7] group-hover:scale-[1.04] group-hover:brightness-[0.85] transition-all duration-700" style="height:640px" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-black/10 pointer-events-none"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-8">
+            <span class={`inline-block text-[0.6rem] font-bold tracking-[0.18em] uppercase px-3 py-1 mb-3 ${diffClass}`}>{route.data.difficulty}</span>
+            <div class="font-display text-[2.2rem] font-bold text-white leading-[1.1] mb-2">{route.data.title}</div>
+            <div class="flex gap-4 text-[0.72rem] text-white/50"><span>{route.data.distance} km</span><span>·</span><span>{route.data.duration}</span></div>
+          </div>
+        </a>
+      );
+    })}
+    {allRoutes.slice(1).map((route) => {
+      const diffClass = { lätt: 'bg-green-500/10 text-green-400 border border-green-500/25', medel: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/25', krävande: 'bg-red-500/10 text-red-400 border border-red-500/25' }[route.data.difficulty];
+      return (
+        <a href={`/routes/${route.data.slug}`} class="group relative overflow-hidden">
+          <img src={route.data.coverImage} alt={route.data.title} class="w-full object-cover brightness-[0.65] group-hover:scale-[1.04] group-hover:brightness-[0.85] transition-all duration-700" style="height:316px" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-black/10 pointer-events-none"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-8">
+            <span class={`inline-block text-[0.6rem] font-bold tracking-[0.18em] uppercase px-3 py-1 mb-3 ${diffClass}`}>{route.data.difficulty}</span>
+            <div class="font-display text-[1.6rem] font-bold text-white leading-[1.1] mb-2">{route.data.title}</div>
+            <div class="flex gap-4 text-[0.72rem] text-white/50"><span>{route.data.distance} km</span><span>·</span><span>{route.data.duration}</span></div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+  <div class="bg-brand-dark px-20 pt-8 pb-20 text-right">
+    <a href="/routes" class="text-[0.7rem] tracking-[0.2em] uppercase text-white/35 border-b border-brand-gold/40 pb-px hover:text-brand-gold transition-colors">{t.home.allRoutes}</a>
+  </div>
+
+  <!-- Upcoming dates -->
+  <section class="bg-brand-surface px-20 py-20">
+    <div class="flex items-center gap-4 mb-5">
+      <div class="w-8 h-px bg-brand-gold"></div>
+      <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.sectionDates}</span>
+    </div>
+    <h2 class="font-display text-[2.75rem] font-bold mb-12">{t.home.upcomingDates}</h2>
+    <div class="grid grid-cols-3 gap-[1px] bg-white/[0.06]">
+      {upcomingDates.map((d) => {
+        const date = new Date(d.date);
+        return (
+          <a href={`/contact?route=${d.routeSlug}&date=${d.date}`} class="block bg-brand-mid p-9 hover:bg-[#222] transition-colors">
+            <div class="text-[0.6rem] font-semibold tracking-[0.2em] uppercase text-brand-gold mb-1">
+              {monthNames[date.getMonth()]} {date.getFullYear()}
+            </div>
+            <div class="font-display text-[3rem] font-bold text-white leading-none mb-4">
+              {String(date.getDate()).padStart(2, '0')}
+            </div>
+            <div class="text-[0.9rem] font-medium text-white/85 mb-1">{d.routeTitle}</div>
+            <div class="text-[0.72rem] text-white/35 mb-6">{d.spotsLeft} av {d.spots} platser kvar</div>
+            <div class="text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-brand-gold">Anmäl dig →</div>
+          </a>
+        );
+      })}
+    </div>
+    <div class="mt-4 text-right">
+      <a href="/calendar" class="text-[0.7rem] tracking-[0.2em] uppercase text-white/25 hover:text-white/50 transition-colors">{t.home.allDates}</a>
+    </div>
+  </section>
+
+  <!-- Manifesto -->
+  <div class="grid grid-cols-2 min-h-[60vh]">
+    <div class="relative overflow-hidden bg-black">
+      <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=900&q=85')] bg-center bg-cover brightness-[0.25]"></div>
+    </div>
+    <div class="bg-brand-dark px-20 py-24 flex flex-col justify-center">
+      <div class="flex items-center gap-4 mb-5">
+        <div class="w-8 h-px bg-brand-gold"></div>
+        <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.aboutEyebrow}</span>
+      </div>
+      <blockquote class="font-display text-[2.2rem] font-bold italic leading-[1.25] text-white mb-8">
+        {t.home.manifestoQuote1}<br />
+        {t.home.manifestoQuote2} <em class="not-italic text-brand-gold">{t.home.manifestoEm}</em>
+      </blockquote>
+      <p class="text-[0.88rem] text-white/45 leading-[1.9] max-w-[26rem] mb-10">{t.home.manifestoBody}</p>
+      <a href="/about" class="inline-flex items-center border border-white/25 text-white/80 text-[0.7rem] font-semibold tracking-[0.2em] uppercase px-10 py-4 w-fit hover:border-brand-gold hover:text-brand-gold transition-colors">
+        {t.home.readMore}
+      </a>
+    </div>
+  </div>
+
+</BaseLayout>

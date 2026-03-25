@@ -1,0 +1,71 @@
+---
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: 'sv' | 'en';
+  routeTitle?: string;
+  routeSlug?: string;
+  tourDate?: string;
+  spotsLeft?: number;
+}
+
+const { lang, routeTitle, routeSlug, tourDate, spotsLeft } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<form
+  name="tour-signup"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="space-y-5"
+>
+  <input type="hidden" name="form-name" value="tour-signup" />
+  <input type="hidden" name="route" value={routeSlug} />
+  <input type="hidden" name="tour-date" value={tourDate} />
+  <p class="hidden"><input name="bot-field" /></p>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white/35 mb-2">{t.contact.firstName} *</label>
+      <input type="text" name="first-name" required
+        class="w-full bg-white/[0.04] border border-white/10 text-white text-sm px-4 py-3 outline-none focus:border-brand-gold transition-colors" />
+    </div>
+    <div>
+      <label class="block text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white/35 mb-2">{t.contact.lastName} *</label>
+      <input type="text" name="last-name" required
+        class="w-full bg-white/[0.04] border border-white/10 text-white text-sm px-4 py-3 outline-none focus:border-brand-gold transition-colors" />
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white/35 mb-2">{t.contact.email} *</label>
+    <input type="email" name="email" required
+      class="w-full bg-white/[0.04] border border-white/10 text-white text-sm px-4 py-3 outline-none focus:border-brand-gold transition-colors" />
+  </div>
+
+  <div>
+    <label class="block text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white/35 mb-2">{t.contact.phone}</label>
+    <input type="tel" name="phone"
+      class="w-full bg-white/[0.04] border border-white/10 text-white text-sm px-4 py-3 outline-none focus:border-brand-gold transition-colors" />
+  </div>
+
+  <div>
+    <label class="block text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white/35 mb-2">{t.contact.bike}</label>
+    <input type="text" name="motorcycle" placeholder={t.contact.bikePlaceholder}
+      class="w-full bg-white/[0.04] border border-white/10 text-white text-sm px-4 py-3 outline-none focus:border-brand-gold transition-colors placeholder:text-white/20" />
+  </div>
+
+  <div>
+    <label class="block text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white/35 mb-2">{t.contact.message}</label>
+    <textarea name="message" rows={3} placeholder={t.contact.messagePlaceholder}
+      class="w-full bg-white/[0.04] border border-white/10 text-white text-sm px-4 py-3 outline-none focus:border-brand-gold transition-colors placeholder:text-white/20 resize-none"></textarea>
+  </div>
+
+  <button type="submit"
+    class="w-full bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase py-4 hover:bg-white transition-colors mt-2">
+    {t.contact.submit}
+  </button>
+
+  <p class="text-[0.7rem] text-white/20 text-center leading-relaxed">{t.contact.note}</p>
+</form>

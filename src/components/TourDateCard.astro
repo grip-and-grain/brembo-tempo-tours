@@ -1,0 +1,43 @@
+---
+interface Props {
+  date: string;
+  spots: number;
+  spotsLeft: number;
+  routeSlug: string;
+  routeTitle: string;
+  lang: 'sv' | 'en';
+  signupLabel: string;
+  spotsOfLabel: string;
+  spotsLeftLabel: string;
+}
+
+const { date, spots, spotsLeft, routeSlug, routeTitle, lang, signupLabel, spotsOfLabel, spotsLeftLabel } = Astro.props;
+
+const d = new Date(date);
+const contactHref = (lang === 'en' ? '/en/contact' : '/contact') + `?route=${routeSlug}&date=${date}`;
+
+const spotsColor = spotsLeft <= 2 ? 'text-red-400' : spotsLeft <= 4 ? 'text-yellow-400' : 'text-green-400';
+
+const monthSv = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+const monthEn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const months = lang === 'en' ? monthEn : monthSv;
+---
+
+<div class="border border-white/[0.08] p-5">
+  <div class="flex justify-between items-start mb-3">
+    <div>
+      <div class="text-[0.6rem] tracking-[0.15em] uppercase text-brand-gold mb-1">
+        {months[d.getMonth()]} {d.getFullYear()}
+      </div>
+      <div class="font-display text-base font-bold">
+        {lang === 'sv' ? 'Lördag' : 'Saturday'} {d.getDate()}
+      </div>
+    </div>
+    <div class={`text-[0.68rem] font-medium ${spotsColor}`}>
+      {spotsLeft} {spotsOfLabel} {spots} {spotsLeftLabel}
+    </div>
+  </div>
+  <a href={contactHref} class="block w-full text-center bg-brand-gold text-black text-[0.65rem] font-bold tracking-[0.2em] uppercase py-3 hover:bg-white transition-colors">
+    {signupLabel}
+  </a>
+</div>
