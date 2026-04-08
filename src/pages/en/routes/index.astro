@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RouteCard from '../../../components/RouteCard.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../../../i18n';
+
+const lang = 'en';
+const t = useTranslations(lang);
+const routes = await getCollection('routes', ({ data }) => data.published);
+---
+
+<BaseLayout title={t.nav.routes} lang={lang} activeNav="routes">
+
+  <div class="bg-brand-dark px-20 pt-48 pb-14">
+    <div class="flex items-center gap-4 mb-4">
+      <div class="w-8 h-px bg-brand-gold"></div>
+      <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.route.eyebrow}</span>
+    </div>
+    <h1 class="font-display text-[4rem] font-black leading-none">
+      {t.route.chooseTitle1}<br />
+      <em class="italic text-brand-gold">{t.route.chooseTitleEm}</em>
+    </h1>
+  </div>
+
+  {routes.map((route, i) => (
+    <RouteCard
+      slug={route.data.slug}
+      title={route.data.titleEn}
+      description={route.data.descriptionEn}
+      distance={route.data.distance}
+      duration={route.data.durationEn}
+      difficulty={route.data.difficulty}
+      difficultyLabel={t.route.difficulty[route.data.difficulty]}
+      coverImage={route.data.coverImage}
+      mapThumbnail={route.data.mapThumbnail}
+      dates={route.data.dates}
+      index={i}
+      lang={lang}
+      readMore={t.route.readMore}
+    />
+  ))}
+
+</BaseLayout>

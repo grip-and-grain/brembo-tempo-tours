@@ -2,6 +2,7 @@ import type { Translations } from './sv';
 
 export const en: Translations = {
   nav: {
+    home: 'Home',
     routes: 'Routes',
     calendar: 'Calendar',
     about: 'About',
@@ -82,8 +83,15 @@ export const en: Translations = {
     spotsLeft: 'of 8 spots left',
     dateLabel: 'Date',
     routeLabel: 'Route',
+    generalEyebrow: 'Get in touch',
+    generalTitle: 'Questions? Reach out.',
+    generalBody: "Fill out the form and we'll get back to you within 24 hours. Prefer to reach us directly? Send us an email instead.",
+    emailLabel: 'Email',
+    thankYouTitle: 'Thank you for signing up.',
+    thankYouBody: "We've received your request and will get back to you by email within 24 hours.",
+    thankYouBack: '← Back to routes',
   },
   footer: {
-    copy: '© 2026 · Östergötland, Sweden',
+    copy: '© 2026 · Brembo Tempo · Östergötland, Sweden',
   },
 };

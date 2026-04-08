@@ -16,21 +16,30 @@ const t = useTranslations(lang);
 
     <!-- Left: context image -->
     <div class="relative overflow-hidden bg-black">
-      <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547549082-4bc09bb2a596?w=900&q=85')] bg-center bg-cover brightness-[0.25]"></div>
+      <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('/images/img_2008.jpg'); filter: brightness(0.25)"></div>
       <div class="relative z-10 h-full flex flex-col justify-end p-20">
-        <div id="contact-context">
+        <!-- Shown when arriving from a route (with URL params) -->
+        <div id="contact-context-route" class="hidden">
           <div class="text-[0.6rem] tracking-[0.25em] uppercase text-brand-gold mb-3">{t.contact.eyebrow}</div>
-          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8" id="context-title">—</h2>
+          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8" id="context-title"></h2>
           <div class="flex gap-8 mb-8">
             <div>
               <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.dateLabel}</div>
-              <div class="text-[0.95rem] font-medium text-white/85" id="context-date">—</div>
+              <div class="text-[0.95rem] font-medium text-white/85" id="context-date"></div>
             </div>
             <div>
               <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.routeLabel}</div>
-              <div class="text-[0.95rem] font-medium text-white/85" id="context-route">—</div>
+              <div class="text-[0.95rem] font-medium text-white/85" id="context-route"></div>
             </div>
           </div>
+        </div>
+        <!-- Shown when visiting contact page directly -->
+        <div id="contact-context-general">
+          <div class="text-[0.6rem] tracking-[0.25em] uppercase text-brand-gold mb-3">{t.contact.generalEyebrow}</div>
+          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8">{t.contact.generalTitle}</h2>
+          <p class="text-[0.95rem] text-white/60 leading-relaxed max-w-md mb-8">{t.contact.generalBody}</p>
+          <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.emailLabel}</div>
+          <a href="mailto:brembotempo.tours@gmail.com" class="text-[0.95rem] text-brand-gold hover:text-white transition-colors">brembotempo.tours@gmail.com</a>
         </div>
       </div>
     </div>
@@ -54,7 +63,13 @@ const t = useTranslations(lang);
   const route = params.get('route');
   const date = params.get('date');
 
+  const routeCtx = document.getElementById('contact-context-route');
+  const generalCtx = document.getElementById('contact-context-general');
+
   if (route) {
+    routeCtx?.classList.remove('hidden');
+    generalCtx?.classList.add('hidden');
+
     const titleEl = document.getElementById('context-title');
     const routeEl = document.getElementById('context-route');
     if (titleEl) titleEl.textContent = route.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());

@@ -20,5 +20,14 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# Drive images downloaded at build time
+public/images/drive-*
+
 # jetbrains setting folder
 .idea/
+
+# Netlify local state
+.netlify/
+
+# Raw source images
+pictures/

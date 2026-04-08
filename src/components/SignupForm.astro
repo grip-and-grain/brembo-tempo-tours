@@ -16,6 +16,7 @@ const t = useTranslations(lang);
 <form
   name="tour-signup"
   method="POST"
+  action={lang === 'en' ? '/en/thank-you' : '/thank-you'}
   data-netlify="true"
   netlify-honeypot="bot-field"
   class="space-y-5"

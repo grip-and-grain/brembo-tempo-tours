@@ -15,3 +15,24 @@ body {
   background: var(--color-brand-dark);
   color: #fff;
 }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Gold accent line grow-in */
+.line-reveal {
+  width: 0 !important;
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.line-reveal.in-view {
+  width: var(--line-w) !important;
+}

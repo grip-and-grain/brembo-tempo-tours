@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n';
+
+const lang = 'sv';
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t.nav.about} lang={lang} activeNav="about">
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden" style="height:70vh;min-height:500px">
+    <div class="absolute inset-0 bg-cover" style="background-image: url('/images/img_8981.jpg'); background-position: center 70%"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(13,13,13,0.95) 100%)"></div>
+    <div class="relative z-10 h-full flex flex-col justify-end px-20 pb-16">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-8 h-px bg-brand-gold"></div>
+        <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.aboutEyebrow}</span>
+      </div>
+      <h1 class="font-display font-black leading-[0.92] tracking-tight" style="font-size: clamp(3rem, 6vw, 5rem)">
+        Inte en hobby.<br />
+        <em class="italic text-brand-gold">En livsstil.</em>
+      </h1>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <section class="bg-brand-dark px-20 py-24">
+    <div class="max-w-[720px]">
+      <p class="text-[1.15rem] text-white/75 leading-[1.85] mb-8">
+        Brembo Tempo Tours är byggt av en förare, för förare. Vi kör inte turistrutter — vi kör de vägar som lokala ryttare håller för sig själva. Östergötlands kurvor, passager och utsiktspunkter, guidat av någon som kör dem varje säsong.
+      </p>
+      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-8">
+        Vi är ett litet sällskap — max 8 förare per tur — och det är inte av en slump. Det handlar om kvalitet över kvantitet. Om att faktiskt lära känna de man kör med. Om att kunna stanna vid en utsikt utan att en kolonn av 30 cyklar väntar bakom dig.
+      </p>
+      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-8">
+        Varje rutt är handplockat och körd hundratals gånger. Vi vet var vägunderlaget är perfekt, var det finns en kurva som gör att du glömmer allt annat, och var den bästa fikat finns längs vägen.
+      </p>
+      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-16">
+        Ingen betalning vid anmälan. Inga krav på cykeltyp. Bara bra vägar, bra folk och Östergötland som du aldrig sett det förut.
+      </p>
+
+      <div class="grid grid-cols-3 gap-[1px] bg-white/[0.06] mb-16">
+        <div class="bg-brand-mid p-8">
+          <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">8</div>
+          <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Max förare per tur</div>
+        </div>
+        <div class="bg-brand-mid p-8">
+          <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">180–310</div>
+          <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Kilometer per rutt</div>
+        </div>
+        <div class="bg-brand-mid p-8">
+          <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">100%</div>
+          <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Guide inkluderad</div>
+        </div>
+      </div>
+
+      <a href="/contact" class="inline-flex items-center bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase px-10 py-4 hover:bg-white transition-colors">
+        Kontakta oss
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

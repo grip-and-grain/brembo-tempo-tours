@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t.nav.about} lang={lang} activeNav="about">
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden" style="height:70vh;min-height:500px">
+    <div class="absolute inset-0 bg-cover" style="background-image: url('/images/img_8981.jpg'); background-position: center 70%"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(13,13,13,0.95) 100%)"></div>
+    <div class="relative z-10 h-full flex flex-col justify-end px-20 pb-16">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-8 h-px bg-brand-gold"></div>
+        <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.aboutEyebrow}</span>
+      </div>
+      <h1 class="font-display font-black leading-[0.92] tracking-tight" style="font-size: clamp(3rem, 6vw, 5rem)">
+        Not a hobby.<br />
+        <em class="italic text-brand-gold">A lifestyle.</em>
+      </h1>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <section class="bg-brand-dark px-20 py-24">
+    <div class="max-w-[720px]">
+      <p class="text-[1.15rem] text-white/75 leading-[1.85] mb-8">
+        Brembo Tempo Tours is built by a rider, for riders. We don't run tourist routes — we ride the roads locals keep to themselves. Östergötland's curves, passes and viewpoints, guided by someone who rides them every season.
+      </p>
+      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-8">
+        We're a small group — max 8 riders per tour — and that's not by accident. It's about quality over quantity. About actually getting to know the people you ride with. About being able to stop at a viewpoint without a column of 30 bikes waiting behind you.
+      </p>
+      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-8">
+        Every route is handpicked and ridden hundreds of times. We know where the road surface is perfect, where there's a corner that makes you forget everything else, and where the best coffee stop is along the way.
+      </p>
+      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-16">
+        No payment at signup. No requirements on bike type. Just great roads, great people, and Östergötland like you've never seen it.
+      </p>
+
+      <div class="grid grid-cols-3 gap-[1px] bg-white/[0.06] mb-16">
+        <div class="bg-brand-mid p-8">
+          <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">8</div>
+          <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Max riders per tour</div>
+        </div>
+        <div class="bg-brand-mid p-8">
+          <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">180–310</div>
+          <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Kilometres per route</div>
+        </div>
+        <div class="bg-brand-mid p-8">
+          <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">100%</div>
+          <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Guide included</div>
+        </div>
+      </div>
+
+      <a href="/en/contact" class="inline-flex items-center bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase px-10 py-4 hover:bg-white transition-colors">
+        Get in touch
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

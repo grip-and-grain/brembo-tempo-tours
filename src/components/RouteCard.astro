@@ -8,14 +8,14 @@ interface Props {
   difficulty: 'lätt' | 'medel' | 'krävande';
   difficultyLabel: string;
   coverImage: string;
-  dateCount: number;
+  mapThumbnail?: string;
+  dates: { date: string; spots: number; spotsLeft: number }[];
   index: number;
   lang: 'sv' | 'en';
   readMore: string;
-  datesLabel: string;
 }
 
-const { slug, title, description, distance, duration, difficulty, difficultyLabel, coverImage, dateCount, index, lang, readMore, datesLabel } = Astro.props;
+const { slug, title, description, distance, duration, difficulty, difficultyLabel, coverImage, mapThumbnail, dates, index, lang, readMore } = Astro.props;
 
 const href = lang === 'en' ? `/en/routes/${slug}` : `/routes/${slug}`;
 
@@ -24,19 +24,14 @@ const diffClass = {
   medel: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/25',
   krävande: 'bg-red-500/10 text-red-400 border border-red-500/25',
 }[difficulty];
+
+const monthsSv = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+const monthsEn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const months = lang === 'en' ? monthsEn : monthsSv;
 ---
 
-<a href={href} class="route-row group grid grid-cols-2 min-h-[480px] border-t border-white/[0.06] overflow-hidden" style={index % 2 !== 0 ? 'direction:rtl' : ''}>
-  <div class="relative overflow-hidden" style={index % 2 !== 0 ? 'direction:ltr' : ''}>
-    <img
-      src={coverImage}
-      alt={title}
-      class="w-full h-full min-h-[480px] object-cover brightness-[0.7] group-hover:scale-[1.04] group-hover:brightness-[0.85] transition-all duration-700"
-    />
-    <div class="absolute inset-0 bg-gradient-to-r from-brand-dark/15 to-transparent pointer-events-none"></div>
-  </div>
-
-  <div class="bg-brand-dark flex flex-col justify-center px-20 py-16" style={index % 2 !== 0 ? 'direction:ltr' : ''}>
+<a href={href} class="route-row group block border-t border-white/[0.06] overflow-hidden">
+  <div class="bg-brand-dark flex flex-col justify-center px-20 py-16">
     <div class="text-[5rem] font-display font-black text-white/[0.04] leading-none mb-[-1.5rem]">
       {String(index + 1).padStart(2, '0')}
     </div>
@@ -54,11 +49,19 @@ const diffClass = {
         <span class="block font-display text-[1.4rem] font-bold text-white leading-none">{duration}</span>
         <span class="block text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mt-1">tid</span>
       </div>
-      <div>
-        <span class="block font-display text-[1.4rem] font-bold text-white leading-none">{dateCount}</span>
-        <span class="block text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mt-1">{datesLabel}</span>
-      </div>
     </div>
+    {dates.length > 0 && (
+      <div class="flex flex-wrap gap-3 mb-10">
+        {dates.map(d => {
+          const dt = new Date(d.date);
+          return (
+            <span class="text-[0.72rem] text-white/40 border border-white/10 px-3 py-1.5">
+              {dt.getDate()} {months[dt.getMonth()]} {dt.getFullYear()}
+            </span>
+          );
+        })}
+      </div>
+    )}
     <span class="text-[0.7rem] font-semibold tracking-[0.2em] uppercase text-brand-gold border-b border-brand-gold/30 pb-[2px] w-fit group-hover:border-brand-gold transition-colors">
       {readMore}
     </span>

@@ -1,5 +1,6 @@
 export const sv = {
   nav: {
+    home: 'Hem',
     routes: 'Rutter',
     calendar: 'Kalender',
     about: 'Om oss',
@@ -80,9 +81,16 @@ export const sv = {
     spotsLeft: 'av 8 platser kvar',
     dateLabel: 'Datum',
     routeLabel: 'Rutt',
+    generalEyebrow: 'Kontakta oss',
+    generalTitle: 'Frågor? Hör av dig.',
+    generalBody: 'Fyll i formuläret så återkommer vi inom 24 timmar. Vill du nå oss direkt? Maila oss istället.',
+    emailLabel: 'E-post',
+    thankYouTitle: 'Tack för din anmälan.',
+    thankYouBody: 'Vi har tagit emot din förfrågan och återkommer via e-post inom 24 timmar.',
+    thankYouBack: '← Tillbaka till rutter',
   },
   footer: {
-    copy: '© 2026 · Östergötland, Sverige',
+    copy: '© 2026 · Brembo Tempo · Östergötland, Sverige',
   },
 } as const;
 

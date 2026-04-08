@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SignupForm from '../../components/SignupForm.astro';
+import { useTranslations } from '../../i18n';
+
+const lang = 'en';
+const t = useTranslations(lang);
+
+// Pre-fill data comes from URL params at runtime — handled client-side
+---
+
+<BaseLayout title={t.nav.contact} lang={lang} activeNav="contact">
+
+  <div class="grid min-h-[calc(100vh-65px)]" style="grid-template-columns: 1fr 480px">
+
+    <!-- Left: context image -->
+    <div class="relative overflow-hidden bg-black">
+      <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('/images/img_2008.jpg'); filter: brightness(0.25)"></div>
+      <div class="relative z-10 h-full flex flex-col justify-end p-20">
+        <!-- Shown when arriving from a route (with URL params) -->
+        <div id="contact-context-route" class="hidden">
+          <div class="text-[0.6rem] tracking-[0.25em] uppercase text-brand-gold mb-3">{t.contact.eyebrow}</div>
+          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8" id="context-title"></h2>
+          <div class="flex gap-8 mb-8">
+            <div>
+              <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.dateLabel}</div>
+              <div class="text-[0.95rem] font-medium text-white/85" id="context-date"></div>
+            </div>
+            <div>
+              <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.routeLabel}</div>
+              <div class="text-[0.95rem] font-medium text-white/85" id="context-route"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Shown when visiting contact page directly -->
+        <div id="contact-context-general">
+          <div class="text-[0.6rem] tracking-[0.25em] uppercase text-brand-gold mb-3">{t.contact.generalEyebrow}</div>
+          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8">{t.contact.generalTitle}</h2>
+          <p class="text-[0.95rem] text-white/60 leading-relaxed max-w-md mb-8">{t.contact.generalBody}</p>
+          <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.emailLabel}</div>
+          <a href="mailto:brembotempo.tours@gmail.com" class="text-[0.95rem] text-brand-gold hover:text-white transition-colors">brembotempo.tours@gmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="bg-brand-mid px-16 py-20 flex flex-col justify-center">
+      <h1 class="font-display text-[2rem] font-bold mb-10">
+        {t.contact.title1}<br />
+        <em class="italic text-brand-gold">{t.contact.titleEm}</em>
+      </h1>
+      <SignupForm lang={lang} />
+    </div>
+
+  </div>
+
+</BaseLayout>
+
+<script>
+  // Pre-fill context from URL params
+  const params = new URLSearchParams(window.location.search);
+  const route = params.get('route');
+  const date = params.get('date');
+
+  const routeCtx = document.getElementById('contact-context-route');
+  const generalCtx = document.getElementById('contact-context-general');
+
+  if (route) {
+    routeCtx?.classList.remove('hidden');
+    generalCtx?.classList.add('hidden');
+
+    const titleEl = document.getElementById('context-title');
+    const routeEl = document.getElementById('context-route');
+    if (titleEl) titleEl.textContent = route.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    if (routeEl) routeEl.textContent = route;
+
+    const routeInput = document.querySelector('input[name="route"]') as HTMLInputElement;
+    if (routeInput) routeInput.value = route;
+  }
+
+  if (date) {
+    const d = new Date(date);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const dateEl = document.getElementById('context-date');
+    if (dateEl) dateEl.textContent = `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+    const dateInput = document.querySelector('input[name="tour-date"]') as HTMLInputElement;
+    if (dateInput) dateInput.value = date;
+  }
+</script>

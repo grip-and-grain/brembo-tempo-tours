@@ -6,7 +6,7 @@ interface Props {
   title: string;
   description?: string;
   lang?: 'sv' | 'en';
-  activeNav?: 'routes' | 'calendar' | 'about' | 'contact';
+  activeNav?: 'home' | 'routes' | 'calendar' | 'about' | 'contact';
 }
 
 const { title, description, lang = 'sv', activeNav } = Astro.props;
@@ -23,67 +23,152 @@ const altLangHref = lang === 'en' ? Astro.url.pathname.replace(/^\/en/, '') || '
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description ?? 'Guidade motorcykelturer i Östergötland'} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title} — Brembo Tempo Tours</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=Nunito:wght@900&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
 
-    <!-- Logo: fixed top-left, fades on scroll -->
-    <div id="site-logo" class="fixed top-0 left-0 z-50 transition-opacity duration-300">
-      <a href={navBase || '/'}>
-        <img src="/logos/black-btt.jpg" alt="Brembo Tempo Tours" class="block h-[170px] w-auto" />
-      </a>
-    </div>
+    <!-- Full-width fixed header: gradient bg keeps both logo and nav readable over any image -->
+    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between" style="background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); padding: 0.75rem 3rem 2rem 2rem">
 
-    <!-- Nav links: fixed top-right -->
-    <nav class="fixed top-0 right-0 z-50 flex items-center gap-10 px-12 py-8">
-      <a
-        href={`${navBase}/routes`}
-        class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'routes' ? 'text-brand-gold' : 'text-white/65 hover:text-white']}
-      >{t.nav.routes}</a>
-      <a
-        href={`${navBase}/calendar`}
-        class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'calendar' ? 'text-brand-gold' : 'text-white/65 hover:text-white']}
-      >{t.nav.calendar}</a>
-      <a
-        href={`${navBase}/about`}
-        class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'about' ? 'text-brand-gold' : 'text-white/65 hover:text-white']}
-      >{t.nav.about}</a>
-      <a
-        href={`${navBase}/contact`}
-        class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'contact' ? 'text-brand-gold' : 'text-white/65 hover:text-white']}
-      >{t.nav.contact}</a>
-      <a
-        href={altLangHref}
-        class="border border-white/20 px-3 py-1 text-[0.65rem] tracking-[0.15em] text-white/50 uppercase hover:border-brand-gold hover:text-brand-gold transition-colors"
-      >{altLang.toUpperCase()}</a>
-    </nav>
+      <!-- Logo -->
+      <div id="site-logo" class="transition-opacity duration-300">
+        <a href={navBase || '/'} class="flex items-center gap-1">
+          <img src="/logos/btt.png" alt="" class="block h-[72px] w-auto" />
+          <div style="font-family: 'Nunito', sans-serif; font-weight: 900; line-height: 1.05;">
+            <div style="font-size: 1.15rem; color: #fff; letter-spacing: 0.04em;">BREMBO TEMPO</div>
+            <div style="font-size: 1.05rem; color: #c8a96e; letter-spacing: 0.12em;">TOURS</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Nav links -->
+      <nav class="flex items-center gap-10">
+        <a
+          href={navBase || '/'}
+          class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'home' ? 'text-brand-gold' : 'text-white/85 hover:text-white']}
+        >{t.nav.home}</a>
+        <a
+          href={`${navBase}/routes`}
+          class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'routes' ? 'text-brand-gold' : 'text-white/85 hover:text-white']}
+        >{t.nav.routes}</a>
+        <a
+          href={`${navBase}/calendar`}
+          class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'calendar' ? 'text-brand-gold' : 'text-white/85 hover:text-white']}
+        >{t.nav.calendar}</a>
+        <a
+          href={`${navBase}/about`}
+          class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'about' ? 'text-brand-gold' : 'text-white/85 hover:text-white']}
+        >{t.nav.about}</a>
+        <a
+          href={`${navBase}/contact`}
+          class:list={['nav-link text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors', activeNav === 'contact' ? 'text-brand-gold' : 'text-white/85 hover:text-white']}
+        >{t.nav.contact}</a>
+        <a
+          href={altLangHref}
+          class="border border-white/30 px-3 py-1 text-[0.65rem] tracking-[0.15em] text-white/70 uppercase hover:border-brand-gold hover:text-brand-gold transition-colors"
+        >{altLang.toUpperCase()}</a>
+      </nav>
+
+    </header>
 
     <main>
       <slot />
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black border-t border-white/[0.06] px-20 py-10 flex items-center justify-between">
+    <footer class="bg-black border-t border-white/[0.06] px-20 py-10 flex flex-col items-center gap-4">
       <a href={navBase || '/'}>
-        <img src="/logos/black-btt.jpg" alt="Brembo Tempo Tours" class="h-[72px] w-auto" />
+        <img src="/logos/btt.png" alt="Brembo Tempo Tours" class="h-[52px] w-auto" />
       </a>
       <span class="text-[0.7rem] text-white/20">{t.footer.copy}</span>
     </footer>
 
     <script>
-      const logo = document.getElementById('site-logo');
-      if (logo) {
-        window.addEventListener('scroll', () => {
-          const opacity = Math.max(0, 1 - window.scrollY / 220);
-          logo.style.opacity = String(opacity);
-          logo.style.pointerEvents = opacity < 0.05 ? 'none' : 'auto';
-        }, { passive: true });
+      const logo   = document.getElementById('site-logo');
+      const header = document.querySelector('header');
+      const heroImg = document.querySelector('main > section:first-child img') as HTMLElement | null;
+
+      // ── Combined scroll handler ──────────────────────────────────────────
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+
+        // Logo fade-out as user scrolls into page
+        if (logo) {
+          const op = Math.max(0, 1 - y / 220);
+          logo.style.opacity = String(op);
+          logo.style.pointerEvents = op < 0.05 ? 'none' : 'auto';
+        }
+
+        // Header: transparent gradient → solid dark once past the hero
+        if (header) {
+          const pastHero = y > window.innerHeight * 0.8;
+          (header as HTMLElement).style.background = pastHero
+            ? 'rgba(13,13,13,0.96)'
+            : 'linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%)';
+        }
+
+        // Hero image parallax — drifts up slightly as page scrolls
+        if (heroImg) heroImg.style.transform = `translateY(${y * 0.22}px)`;
+      }, { passive: true });
+
+      // ── Intersection Observer for reveal animations ──────────────────────
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const delay = Number((entry.target as HTMLElement).dataset.delay ?? 0);
+          setTimeout(() => entry.target.classList.add('in-view'), delay);
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      function watch(selector: string, stagger = 0) {
+        document.querySelectorAll(selector).forEach((el, i) => {
+          el.classList.add('reveal');
+          if (stagger) (el as HTMLElement).dataset.delay = String(i * stagger);
+          observer.observe(el);
+        });
       }
+
+      // Major content sections (skip first hero)
+      watch('main > *:not(:first-child)', 0);
+
+      // Stats bar cells — stagger each one
+      watch('.bg-brand-gold.grid > div', 120);
+
+      // Route cards
+      watch('.route-row', 90);
+
+      // Date / booking cards in 3-col grids
+      watch('.grid.grid-cols-3 > a, .grid.grid-cols-3 > div', 110);
+
+      // Calendar rows
+      watch('.border-b.border-white\\/\\[0\\.06\\]', 55);
+
+      // Gallery thumbnails
+      watch('.grid .overflow-hidden', 70);
+
+      // ── Gold accent lines grow-in ────────────────────────────────────────
+      const lineObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('in-view');
+          lineObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.8 });
+
+      document.querySelectorAll('.w-8.h-px.bg-brand-gold, .w-10.h-px.bg-brand-gold, .w-6.h-px.bg-brand-gold').forEach(el => {
+        const w = el.classList.contains('w-10') ? '2.5rem' : el.classList.contains('w-6') ? '1.5rem' : '2rem';
+        (el as HTMLElement).style.setProperty('--line-w', w);
+        el.classList.add('line-reveal');
+        lineObserver.observe(el);
+      });
     </script>
 
   </body>

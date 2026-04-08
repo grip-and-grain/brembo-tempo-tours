@@ -1,19 +1,20 @@
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
 
 const tourDateSchema = z.object({
   date: z.string(),
   spots: z.number().int().positive(),
   spotsLeft: z.number().int().min(0),
-  notes: z.string().optional(),
 });
 
 const routes = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/routes' }),
+  loader: async () => {
+    const { fetchRoutes } = await import('./lib/sheets.js');
+    return fetchRoutes();
+  },
   schema: z.object({
+    slug: z.string(),
     title: z.string(),
     titleEn: z.string(),
-    slug: z.string(),
     description: z.string(),
     descriptionEn: z.string(),
     distance: z.number(),
@@ -23,12 +24,13 @@ const routes = defineCollection({
     difficultyEn: z.enum(['easy', 'moderate', 'demanding']),
     region: z.string().default('Östergötland'),
     coverImage: z.string(),
+    mapThumbnail: z.string().optional(),
     gallery: z.array(z.string()),
-    mapEmbedUrl: z.string(),
-    gpxFile: z.string().optional(),
     highlights: z.array(z.string()),
     dates: z.array(tourDateSchema),
     published: z.boolean().default(true),
+    bodySv: z.string(),
+    bodyEn: z.string(),
   }),
 });
 

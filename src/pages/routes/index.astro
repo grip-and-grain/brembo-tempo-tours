@@ -32,11 +32,11 @@ const routes = await getCollection('routes', ({ data }) => data.published);
       difficulty={route.data.difficulty}
       difficultyLabel={t.route.difficulty[route.data.difficulty]}
       coverImage={route.data.coverImage}
-      dateCount={route.data.dates.length}
+      mapThumbnail={route.data.mapThumbnail}
+      dates={route.data.dates}
       index={i}
       lang={lang}
       readMore={t.route.readMore}
-      datesLabel={t.route.datesLabel}
     />
   ))}
 

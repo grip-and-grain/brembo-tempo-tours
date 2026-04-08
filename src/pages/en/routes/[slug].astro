@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TourDateCard from '../../../components/TourDateCard.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../../../i18n';
+
+export async function getStaticPaths() {
+  const routes = await getCollection('routes', ({ data }) => data.published);
+  return routes.map(r => ({ params: { slug: r.data.slug }, props: { route: r } }));
+}
+
+const { route } = Astro.props;
+const lang = 'en';
+const t = useTranslations(lang);
+const bodyParagraphs = route.data.bodyEn.split('||').map(p => p.trim()).filter(Boolean);
+
+const diffClass = {
+  lätt: 'bg-green-500/10 text-green-400 border border-green-500/25',
+  medel: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/25',
+  krävande: 'bg-red-500/10 text-red-400 border border-red-500/25',
+}[route.data.difficulty];
+---
+
+<BaseLayout title={route.data.titleEn} lang={lang} activeNav="routes">
+
+  <!-- Hero -->
+  <section class="relative bg-brand-dark flex flex-col justify-end px-20 pb-14 pt-32">
+    <a href="/en/routes" class="text-[0.65rem] tracking-[0.2em] uppercase text-white/35 hover:text-brand-gold transition-colors mb-6 w-fit">{t.route.backToRoutes}</a>
+    <span class={`inline-flex text-[0.6rem] font-bold tracking-[0.18em] uppercase px-3 py-1 mb-4 w-fit ${diffClass}`}>
+      {t.route.difficulty[route.data.difficulty]} · {route.data.durationEn}
+    </span>
+    <h1 class="font-display font-black leading-[0.95] tracking-tight text-white mb-6" style="font-size: clamp(3rem, 6vw, 5.5rem)">
+      {route.data.titleEn}
+    </h1>
+    <div class="flex gap-6 text-white/40 text-[0.85rem]">
+      <span>{route.data.distance} km</span>
+      <span>·</span>
+      <span>{route.data.durationEn}</span>
+      <span>·</span>
+      <span>{route.data.region}</span>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <div class="bg-brand-gold grid grid-cols-4">
+    {[
+      [route.data.distance + ' km', t.route.distanceLabel],
+      [route.data.durationEn, t.route.durationLabel],
+      [t.route.difficulty[route.data.difficulty], t.route.difficultyLabel],
+      [route.data.region, t.route.regionLabel],
+    ].map(([val, label], i) => (
+      <div class:list={['py-7 px-10', i < 3 && 'border-r border-black/[0.12]']}>
+        <div class="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-black/45 mb-1">{label}</div>
+        <div class="font-display text-[1.6rem] font-bold text-black leading-none">{val}</div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Main content + sidebar -->
+  <div class="grid border-t border-white/[0.06]" style="grid-template-columns: 1fr 360px">
+
+    <div class="px-20 py-16 border-r border-white/[0.06]">
+
+      <!-- Body -->
+      <div class="prose-custom mb-14">
+        {bodyParagraphs.map(p => <p>{p}</p>)}
+      </div>
+
+      <!-- Highlights -->
+      <div class="mb-14">
+        <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
+          <div class="w-6 h-px bg-brand-gold"></div>{t.route.highlights}
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {route.data.highlights.map(h => (
+            <span class="text-[0.7rem] border border-white/12 px-3 py-1.5 text-white/50">{h}</span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Gallery -->
+      {route.data.gallery.length > 0 && (
+        <div class="mb-14">
+          <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
+            <div class="w-6 h-px bg-brand-gold"></div>{t.route.gallery}
+          </div>
+          <div class="grid grid-cols-3 gap-[2px]">
+            {route.data.gallery.map((img) => (
+              <div class="overflow-hidden aspect-[4/3]">
+                <img src={img} alt="" class="w-full h-full object-cover brightness-[0.8] hover:brightness-100 hover:scale-[1.05] transition-all duration-500" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Map -->
+      {route.data.mapThumbnail && (
+        <div class="mb-14">
+          <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
+            <div class="w-6 h-px bg-brand-gold"></div>{t.route.map}
+          </div>
+          <div class="w-1/2">
+            <img src={route.data.mapThumbnail} alt={`Map: ${route.data.titleEn}`} class="w-full h-auto rounded border border-white/10" />
+          </div>
+        </div>
+      )}
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="p-10 bg-brand-surface sticky top-0 self-start">
+      <h2 class="font-display text-[1.2rem] font-bold mb-6">{t.route.upcomingDates}</h2>
+      <div class="space-y-3">
+        {route.data.dates.map(d => (
+          <TourDateCard
+            date={d.date}
+            spots={d.spots}
+            spotsLeft={d.spotsLeft}
+            routeSlug={route.data.slug}
+            routeTitle={route.data.titleEn}
+            lang={lang}
+            signupLabel={t.route.signup}
+            spotsOfLabel={t.route.spotsOf}
+            spotsLeftLabel={t.route.spotsLeft}
+          />
+        ))}
+      </div>
+      <p class="text-[0.72rem] text-white/25 leading-relaxed mt-5">{t.route.sidebarNote}</p>
+    </div>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  .prose-custom :global(p) {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 1.25rem;
+  }
+  .prose-custom :global(p:first-child) {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.75);
+  }
+</style>
