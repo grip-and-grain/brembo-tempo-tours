@@ -12,7 +12,7 @@ const t = useTranslations(lang);
   <section class="relative overflow-hidden" style="height:70vh;min-height:500px">
     <div class="absolute inset-0 bg-cover" style="background-image: url('/images/img_8981.jpg'); background-position: center 70%"></div>
     <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(13,13,13,0.95) 100%)"></div>
-    <div class="relative z-10 h-full flex flex-col justify-end px-20 pb-16">
+    <div class="relative z-10 h-full flex flex-col justify-end px-6 md:px-20 pb-16">
       <div class="flex items-center gap-4 mb-4">
         <div class="w-8 h-px bg-brand-gold"></div>
         <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.aboutEyebrow}</span>
@@ -25,7 +25,7 @@ const t = useTranslations(lang);
   </section>
 
   <!-- Body -->
-  <section class="bg-brand-dark px-20 py-24">
+  <section class="bg-brand-dark px-6 md:px-20 py-16 md:py-24">
     <div class="max-w-[720px]">
       <p class="text-[1.15rem] text-white/75 leading-[1.85] mb-8">
         Brembo Tempo Tours är byggt av en förare, för förare. Vi kör inte turistrutter — vi kör de vägar som lokala ryttare håller för sig själva. Östergötlands kurvor, passager och utsiktspunkter, guidat av någon som kör dem varje säsong.
@@ -40,7 +40,7 @@ const t = useTranslations(lang);
         Ingen betalning vid anmälan. Inga krav på cykeltyp. Bara bra vägar, bra folk och Östergötland som du aldrig sett det förut.
       </p>
 
-      <div class="grid grid-cols-3 gap-[1px] bg-white/[0.06] mb-16">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-[1px] bg-white/[0.06] mb-16">
         <div class="bg-brand-mid p-8">
           <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">8</div>
           <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Max förare per tur</div>

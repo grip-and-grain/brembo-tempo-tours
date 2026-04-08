@@ -12,17 +12,16 @@ const t = useTranslations(lang);
 
 <BaseLayout title={t.nav.contact} lang={lang} activeNav="contact">
 
-  <div class="grid min-h-[calc(100vh-65px)]" style="grid-template-columns: 1fr 480px">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_480px] min-h-[calc(100vh-65px)]">
 
     <!-- Left: context image -->
-    <div class="relative overflow-hidden bg-black">
+    <div class="relative overflow-hidden bg-black min-h-[40vh] md:min-h-0">
       <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('/images/img_2008.jpg'); filter: brightness(0.25)"></div>
-      <div class="relative z-10 h-full flex flex-col justify-end p-20">
-        <!-- Shown when arriving from a route (with URL params) -->
+      <div class="relative z-10 h-full flex flex-col justify-end p-6 pt-28 md:p-20">
         <div id="contact-context-route" class="hidden">
           <div class="text-[0.6rem] tracking-[0.25em] uppercase text-brand-gold mb-3">{t.contact.eyebrow}</div>
-          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8" id="context-title"></h2>
-          <div class="flex gap-8 mb-8">
+          <h2 class="font-display text-[1.8rem] md:text-[2.5rem] font-bold leading-[1.1] mb-6 md:mb-8" id="context-title"></h2>
+          <div class="flex gap-6 md:gap-8 mb-6 md:mb-8">
             <div>
               <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.dateLabel}</div>
               <div class="text-[0.95rem] font-medium text-white/85" id="context-date"></div>
@@ -33,11 +32,10 @@ const t = useTranslations(lang);
             </div>
           </div>
         </div>
-        <!-- Shown when visiting contact page directly -->
         <div id="contact-context-general">
           <div class="text-[0.6rem] tracking-[0.25em] uppercase text-brand-gold mb-3">{t.contact.generalEyebrow}</div>
-          <h2 class="font-display text-[2.5rem] font-bold leading-[1.1] mb-8">{t.contact.generalTitle}</h2>
-          <p class="text-[0.95rem] text-white/60 leading-relaxed max-w-md mb-8">{t.contact.generalBody}</p>
+          <h2 class="font-display text-[1.8rem] md:text-[2.5rem] font-bold leading-[1.1] mb-6 md:mb-8">{t.contact.generalTitle}</h2>
+          <p class="text-[0.95rem] text-white/60 leading-relaxed max-w-md mb-6 md:mb-8">{t.contact.generalBody}</p>
           <div class="text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mb-1">{t.contact.emailLabel}</div>
           <a href="mailto:brembotempo.tours@gmail.com" class="text-[0.95rem] text-brand-gold hover:text-white transition-colors">brembotempo.tours@gmail.com</a>
         </div>
@@ -45,8 +43,8 @@ const t = useTranslations(lang);
     </div>
 
     <!-- Right: form -->
-    <div class="bg-brand-mid px-16 py-20 flex flex-col justify-center">
-      <h1 class="font-display text-[2rem] font-bold mb-10">
+    <div class="bg-brand-mid px-6 py-12 md:px-16 md:py-20 flex flex-col justify-center">
+      <h1 class="font-display text-[1.6rem] md:text-[2rem] font-bold mb-8 md:mb-10">
         {t.contact.title1}<br />
         <em class="italic text-brand-gold">{t.contact.titleEm}</em>
       </h1>

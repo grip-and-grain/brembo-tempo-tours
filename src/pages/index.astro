@@ -16,6 +16,8 @@ const upcomingDates = allRoutes
 
 const monthNames = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
 
+const maxDistance = Math.max(...allRoutes.map(r => r.data.distance));
+
 const tickerItems = [
   t.home.region,
   ...allRoutes.map(r => r.data.title),
@@ -29,31 +31,32 @@ const tickerItems = [
 <BaseLayout title="Hem" lang={lang} activeNav="home">
 
   <!-- Hero -->
-  <section class="relative h-screen min-h-[700px] overflow-hidden">
+  <section class="relative h-screen min-h-[600px] md:min-h-[700px] overflow-hidden">
     <div class="absolute inset-0 bg-brand-dark"></div>
-    <img src="/images/main_page_2.jpg" alt="" class="absolute top-0 right-0 h-full w-auto" />
-    <div class="absolute inset-0" style="background: linear-gradient(to right, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.62) 48%, rgba(0,0,0,0.06) 100%)"></div>
-    <div class="relative z-10 h-full flex flex-col justify-end px-20 pb-20">
+    <img src="/images/main_page_2.jpg" alt="" class="absolute top-0 h-full w-auto hidden md:block" style="right: -10%" />
+    <div class="absolute inset-0 md:hidden bg-cover bg-center" style="background-image: url('/images/main_page_2.jpg'); filter: brightness(0.3)"></div>
+    <div class="absolute inset-0 hidden md:block" style="background: linear-gradient(to right, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.62) 48%, rgba(0,0,0,0.06) 100%)"></div>
+    <div class="relative z-10 h-full flex flex-col justify-end px-6 pb-16 md:px-20 md:pb-20">
       <div class="hero-reveal flex items-center gap-4 mb-6">
         <div class="w-10 h-px bg-brand-gold"></div>
         <span class="text-[0.65rem] tracking-[0.25em] uppercase text-brand-gold">{t.home.region}</span>
       </div>
-      <h1 class="font-display font-black leading-[0.92] tracking-tight mb-8" style="font-size: clamp(3.5rem, 7vw, 7rem)">
+      <h1 class="font-display font-black leading-[0.92] tracking-tight mb-8" style="font-size: clamp(3rem, 10vw, 7rem)">
         <span class="block overflow-hidden"><span class="hero-word hero-reveal" style="--d:0.1s">{t.home.heroTitle1}</span></span>
         <span class="block overflow-hidden"><span class="hero-word hero-reveal" style="--d:0.28s">{t.home.heroTitle2}</span></span>
         <span class="block overflow-hidden"><span class="hero-word hero-reveal italic text-brand-gold" style="--d:0.48s">{t.home.heroTitleEm}</span></span>
       </h1>
-      <p class="hero-reveal text-white/60 font-light text-lg leading-relaxed max-w-[26rem] mb-12" style="--d:0.7s">{t.home.heroSub}</p>
-      <div class="hero-reveal flex gap-4" style="--d:0.85s">
-        <a href="/routes" class="inline-flex items-center bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase px-10 py-4 hover:bg-white transition-colors">
+      <p class="hero-reveal text-white/60 font-light text-base md:text-lg leading-relaxed max-w-[26rem] mb-10 md:mb-12" style="--d:0.7s">{t.home.heroSub}</p>
+      <div class="hero-reveal flex flex-col sm:flex-row gap-3 sm:gap-4" style="--d:0.85s">
+        <a href="/routes" class="inline-flex items-center justify-center bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase px-8 py-4 md:px-10 hover:bg-white transition-colors">
           {t.home.ctaRoutes}
         </a>
-        <a href="/calendar" class="inline-flex items-center border border-white/25 text-white/80 text-[0.7rem] font-semibold tracking-[0.2em] uppercase px-10 py-4 hover:border-brand-gold hover:text-brand-gold transition-colors">
+        <a href="/calendar" class="inline-flex items-center justify-center border border-white/25 text-white/80 text-[0.7rem] font-semibold tracking-[0.2em] uppercase px-8 py-4 md:px-10 hover:border-brand-gold hover:text-brand-gold transition-colors">
           {t.home.ctaDates}
         </a>
       </div>
     </div>
-    <div class="absolute right-12 bottom-12 flex flex-col items-center gap-2 text-[0.6rem] tracking-[0.2em] uppercase text-white/35">
+    <div class="absolute right-6 md:right-12 bottom-6 md:bottom-12 flex-col items-center gap-2 text-[0.6rem] tracking-[0.2em] uppercase text-white/35 hidden md:flex">
       Scrolla
       <div class="w-px h-12" style="background: linear-gradient(to bottom, rgba(200,169,110,0.6), transparent)"></div>
     </div>
@@ -64,59 +67,76 @@ const tickerItems = [
     <div id="home-ticker" class="flex whitespace-nowrap items-center"></div>
   </div>
 
-  <!-- Routes grid -->
-  <section class="bg-brand-dark px-20 pt-24">
+  <!-- Routes list -->
+  <section class="bg-brand-dark px-6 md:px-20 pt-16 md:pt-24 pb-16 md:pb-24">
     <div class="flex items-center gap-4 mb-5">
       <div class="w-8 h-px bg-brand-gold"></div>
       <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.sectionRoutes}</span>
     </div>
-    <h2 class="font-display text-[2.75rem] font-bold mb-10">{t.home.chooseRoute}</h2>
+    <h2 class="font-display text-[2rem] md:text-[2.75rem] font-bold mb-10">{t.home.chooseRoute}</h2>
+
+    <div class="space-y-0">
+      {allRoutes.map((route) => (
+        <a href={`/routes/${route.data.slug}`} class="group flex items-center gap-5 md:gap-8 py-6 md:py-8 border-b border-white/[0.06] hover:border-brand-gold/30 transition-colors">
+          <!-- Motorcycle icon -->
+          <svg class="w-8 h-8 md:w-10 md:h-10 text-brand-gold/60 group-hover:text-brand-gold transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5" cy="17" r="3" />
+            <circle cx="19" cy="17" r="3" />
+            <path d="M9 17h6" />
+            <path d="M19 14l-2-7h-3l-1.5 4H9L7 8H5" />
+          </svg>
+
+          <!-- Route name -->
+          <div class="min-w-0 md:w-[260px] shrink-0">
+            <div class="font-display text-[1.2rem] md:text-[1.5rem] font-bold text-white group-hover:text-brand-gold transition-colors leading-tight truncate">{route.data.title}</div>
+          </div>
+
+          <!-- Distance bar -->
+          <div class="hidden md:block flex-1 relative h-[3px] bg-white/[0.04] rounded-full">
+            <div class="distance-bar absolute inset-y-0 left-0 bg-brand-gold/25 group-hover:bg-brand-gold/50 rounded-full transition-colors" style={`--bar-w: ${Math.round((route.data.distance / maxDistance) * 100)}%`}></div>
+            <svg class="distance-moto absolute top-1/2 -translate-y-1/2 w-7 h-7 text-brand-gold/40 group-hover:text-brand-gold transition-colors" style={`--moto-pos: ${Math.round((route.data.distance / maxDistance) * 100)}%`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="5" cy="17" r="3" /><circle cx="19" cy="17" r="3" /><path d="M9 17h6" /><path d="M19 14l-2-7h-3l-1.5 4H9L7 8H5" />
+            </svg>
+          </div>
+
+          <!-- Stats (right-aligned) -->
+          <div class="shrink-0 text-right whitespace-nowrap">
+            <span class="font-display text-[1.1rem] font-bold text-white/50">{route.data.distance}</span>
+            <span class="text-[0.6rem] tracking-[0.1em] uppercase text-white/25 ml-1">km</span>
+            <span class="text-white/10 mx-2 hidden md:inline">·</span>
+            <span class="hidden md:inline text-[0.75rem] text-white/25">{route.data.duration}</span>
+            <span class="md:hidden text-white/15 mx-1">·</span>
+            <span class="md:hidden text-[0.75rem] text-white/35">{route.data.duration}</span>
+          </div>
+
+          <!-- Arrow -->
+          <svg class="w-4 h-4 text-white/20 group-hover:text-brand-gold group-hover:translate-x-1 transition-all shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-8 text-right">
+      <a href="/routes" class="text-[0.7rem] tracking-[0.2em] uppercase text-white/35 border-b border-brand-gold/40 pb-px hover:text-brand-gold transition-colors">{t.home.allRoutes}</a>
+    </div>
   </section>
-  <div class="grid grid-cols-2 gap-[2px] bg-black">
-    {allRoutes.slice(0, 1).map((route) => (
-      <a href={`/routes/${route.data.slug}`} class="group relative overflow-hidden row-span-2">
-        <img src={route.data.coverImage} alt={route.data.title} class="w-full object-contain brightness-[0.65] transition-all duration-[1200ms] ease-out group-hover:brightness-[0.88] group-hover:scale-[1.03] bg-brand-dark" style="height:640px" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/15 to-transparent pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-10">
-          <div class="font-display text-[2.4rem] font-bold text-white leading-[1.1] mb-3 group-hover:translate-y-[-3px] transition-transform duration-700">{route.data.title}</div>
-          <div class="flex gap-4 text-[0.72rem] text-white/45 mb-5"><span>{route.data.distance} km</span><span>·</span><span>{route.data.duration}</span></div>
-          <div class="w-6 h-px bg-brand-gold transition-all duration-[800ms] ease-out group-hover:w-14"></div>
-        </div>
-      </a>
-    ))}
-    {allRoutes.slice(1).map((route) => (
-      <a href={`/routes/${route.data.slug}`} class="group relative overflow-hidden">
-        <img src={route.data.coverImage} alt={route.data.title} class="w-full object-contain brightness-[0.65] transition-all duration-[1200ms] ease-out group-hover:brightness-[0.88] group-hover:scale-[1.03] bg-brand-dark" style="height:316px" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/15 to-transparent pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div class="font-display text-[1.7rem] font-bold text-white leading-[1.1] mb-2 group-hover:translate-y-[-3px] transition-transform duration-700">{route.data.title}</div>
-          <div class="flex gap-4 text-[0.72rem] text-white/45 mb-4"><span>{route.data.distance} km</span><span>·</span><span>{route.data.duration}</span></div>
-          <div class="w-5 h-px bg-brand-gold transition-all duration-[800ms] ease-out group-hover:w-10"></div>
-        </div>
-      </a>
-    ))}
-  </div>
-  <div class="bg-brand-dark px-20 pt-8 pb-24 text-right">
-    <a href="/routes" class="text-[0.7rem] tracking-[0.2em] uppercase text-white/35 border-b border-brand-gold/40 pb-px hover:text-brand-gold transition-colors">{t.home.allRoutes}</a>
-  </div>
 
   <!-- Upcoming dates -->
-  <section class="bg-brand-surface px-20 py-24">
+  <section class="bg-brand-surface px-6 md:px-20 py-16 md:py-24">
     <div class="flex items-center gap-4 mb-5">
       <div class="w-8 h-px bg-brand-gold"></div>
       <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.sectionDates}</span>
     </div>
-    <h2 class="font-display text-[2.75rem] font-bold mb-16">{t.home.upcomingDates}</h2>
-    <div class="grid grid-cols-3 gap-8">
+    <h2 class="font-display text-[2rem] md:text-[2.75rem] font-bold mb-10 md:mb-16">{t.home.upcomingDates}</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
       {upcomingDates.map((d) => {
         const date = new Date(d.date);
         return (
           <a href={`/contact?route=${d.routeSlug}&date=${d.date}`}
-            class="group block border border-white/[0.08] p-9 hover:border-brand-gold/40 transition-all duration-500">
+            class="group block border border-white/[0.08] p-7 md:p-9 hover:border-brand-gold/40 transition-all duration-500">
             <div class="text-[0.6rem] font-semibold tracking-[0.22em] uppercase text-brand-gold mb-2">
               {monthNames[date.getMonth()]} {date.getFullYear()}
             </div>
-            <div class="font-display text-[4.5rem] font-bold text-white leading-none mb-6">
+            <div class="font-display text-[3.5rem] md:text-[4.5rem] font-bold text-white leading-none mb-6">
               {String(date.getDate()).padStart(2, '0')}
             </div>
             <div class="w-10 h-px bg-white/12 mb-6 group-hover:bg-brand-gold/40 group-hover:w-16 transition-all duration-500"></div>
@@ -135,20 +155,20 @@ const tickerItems = [
   </section>
 
   <!-- Manifesto -->
-  <div class="grid grid-cols-2 min-h-[65vh]">
-    <div class="relative overflow-hidden bg-black">
+  <div class="grid grid-cols-1 md:grid-cols-2 md:min-h-[65vh]">
+    <div class="relative overflow-hidden bg-black min-h-[40vh] md:min-h-0">
       <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('/images/hero-guide.jpeg'); filter: brightness(0.45)"></div>
     </div>
-    <div class="bg-brand-dark px-24 py-28 flex flex-col justify-center">
+    <div class="bg-brand-dark px-6 py-16 md:px-24 md:py-28 flex flex-col justify-center">
       <div class="flex items-center gap-4 mb-6">
         <div class="w-8 h-px bg-brand-gold"></div>
         <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.home.aboutEyebrow}</span>
       </div>
-      <blockquote class="font-display text-[2.5rem] font-bold italic leading-[1.2] text-white mb-10">
+      <blockquote class="font-display text-[1.8rem] md:text-[2.5rem] font-bold italic leading-[1.2] text-white mb-8 md:mb-10">
         {t.home.manifestoQuote1}<br />
         {t.home.manifestoQuote2} <em class="not-italic text-brand-gold">{t.home.manifestoEm}</em>
       </blockquote>
-      <p class="text-[0.9rem] text-white/40 leading-[2] max-w-[24rem] mb-12">{t.home.manifestoBody}</p>
+      <p class="text-[0.9rem] text-white/40 leading-[2] max-w-[24rem] mb-10 md:mb-12">{t.home.manifestoBody}</p>
       <a href="/about" class="inline-flex items-center gap-5 text-[0.7rem] font-semibold tracking-[0.2em] uppercase text-white/55 hover:text-brand-gold transition-colors duration-300 w-fit">
         <span>{t.home.readMore}</span>
         <div class="w-10 h-px bg-current"></div>

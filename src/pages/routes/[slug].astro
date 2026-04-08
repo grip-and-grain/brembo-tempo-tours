@@ -24,15 +24,15 @@ const diffClass = {
 <BaseLayout title={route.data.title} lang={lang} activeNav="routes">
 
   <!-- Hero -->
-  <section class="relative bg-brand-dark flex flex-col justify-end px-20 pb-14 pt-32">
+  <section class="relative bg-brand-dark flex flex-col justify-end px-6 md:px-20 pb-10 md:pb-14 pt-28 md:pt-32">
     <a href="/routes" class="text-[0.65rem] tracking-[0.2em] uppercase text-white/35 hover:text-brand-gold transition-colors mb-6 w-fit">{t.route.backToRoutes}</a>
     <span class={`inline-flex text-[0.6rem] font-bold tracking-[0.18em] uppercase px-3 py-1 mb-4 w-fit ${diffClass}`}>
       {t.route.difficulty[route.data.difficulty]} · {route.data.duration}
     </span>
-    <h1 class="font-display font-black leading-[0.95] tracking-tight text-white mb-6" style="font-size: clamp(3rem, 6vw, 5.5rem)">
+    <h1 class="font-display font-black leading-[0.95] tracking-tight text-white mb-6" style="font-size: clamp(2rem, 8vw, 5.5rem)">
       {route.data.title}
     </h1>
-    <div class="flex gap-6 text-white/40 text-[0.85rem]">
+    <div class="flex flex-wrap gap-3 md:gap-6 text-white/40 text-[0.85rem]">
       <span>{route.data.distance} km</span>
       <span>·</span>
       <span>{route.data.duration}</span>
@@ -42,31 +42,29 @@ const diffClass = {
   </section>
 
   <!-- Stats strip -->
-  <div class="bg-brand-gold grid grid-cols-4">
+  <div class="bg-brand-gold grid grid-cols-2 md:grid-cols-4">
     {[
       [route.data.distance + ' km', t.route.distanceLabel],
       [route.data.duration, t.route.durationLabel],
       [t.route.difficulty[route.data.difficulty], t.route.difficultyLabel],
       [route.data.region, t.route.regionLabel],
     ].map(([val, label], i) => (
-      <div class:list={['py-7 px-10', i < 3 && 'border-r border-black/[0.12]']}>
+      <div class:list={['py-5 px-6 md:py-7 md:px-10', i < 3 && 'md:border-r border-black/[0.12]']}>
         <div class="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-black/45 mb-1">{label}</div>
-        <div class="font-display text-[1.6rem] font-bold text-black leading-none">{val}</div>
+        <div class="font-display text-[1.2rem] md:text-[1.6rem] font-bold text-black leading-none">{val}</div>
       </div>
     ))}
   </div>
 
   <!-- Main content + sidebar -->
-  <div class="grid border-t border-white/[0.06]" style="grid-template-columns: 1fr 360px">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] border-t border-white/[0.06]">
 
-    <div class="px-20 py-16 border-r border-white/[0.06]">
+    <div class="px-6 md:px-20 py-12 md:py-16 md:border-r border-white/[0.06]">
 
-      <!-- Body -->
       <div class="prose-custom mb-14">
         {bodyParagraphs.map(p => <p>{p}</p>)}
       </div>
 
-      <!-- Highlights -->
       <div class="mb-14">
         <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
           <div class="w-6 h-px bg-brand-gold"></div>{t.route.highlights}
@@ -78,13 +76,12 @@ const diffClass = {
         </div>
       </div>
 
-      <!-- Gallery -->
       {route.data.gallery.length > 0 && (
         <div class="mb-14">
           <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
             <div class="w-6 h-px bg-brand-gold"></div>{t.route.gallery}
           </div>
-          <div class="grid grid-cols-3 gap-[2px]">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
             {route.data.gallery.map((img) => (
               <div class="overflow-hidden aspect-[4/3]">
                 <img src={img} alt="" class="w-full h-full object-cover brightness-[0.8] hover:brightness-100 hover:scale-[1.05] transition-all duration-500" />
@@ -94,12 +91,11 @@ const diffClass = {
         </div>
       )}
 
-      <!-- Map -->
       <div class="mb-14">
         <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
           <div class="w-6 h-px bg-brand-gold"></div>{t.route.map}
         </div>
-        <div class="w-1/2">
+        <div class="w-full md:w-1/2">
           <img src={route.data.mapThumbnail} alt={`Karta: ${route.data.title}`} class="w-full h-auto rounded border border-white/10" />
         </div>
       </div>
@@ -107,7 +103,7 @@ const diffClass = {
     </div>
 
     <!-- Sidebar -->
-    <div class="p-10 bg-brand-surface sticky top-0 self-start">
+    <div class="p-6 md:p-10 bg-brand-surface md:sticky md:top-0 md:self-start">
       <h2 class="font-display text-[1.2rem] font-bold mb-6">{t.route.upcomingDates}</h2>
       <div class="space-y-3">
         {route.data.dates.map(d => (

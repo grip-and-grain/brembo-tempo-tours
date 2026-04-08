@@ -11,12 +11,12 @@ const routes = await getCollection('routes', ({ data }) => data.published);
 
 <BaseLayout title={t.nav.routes} lang={lang} activeNav="routes">
 
-  <div class="bg-brand-dark px-20 pt-48 pb-14">
+  <div class="bg-brand-dark px-6 md:px-20 pt-32 md:pt-48 pb-14">
     <div class="flex items-center gap-4 mb-4">
       <div class="w-8 h-px bg-brand-gold"></div>
       <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.route.eyebrow}</span>
     </div>
-    <h1 class="font-display text-[4rem] font-black leading-none">
+    <h1 class="font-display text-[2.5rem] md:text-[4rem] font-black leading-none">
       {t.route.chooseTitle1}<br />
       <em class="italic text-brand-gold">{t.route.chooseTitleEm}</em>
     </h1>

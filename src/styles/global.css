@@ -36,3 +36,23 @@ body {
 .line-reveal.in-view {
   width: var(--line-w) !important;
 }
+
+/* Distance bar + motorcycle animation */
+.distance-bar {
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s;
+}
+.in-view .distance-bar,
+.reveal.in-view .distance-bar {
+  width: var(--bar-w);
+}
+.distance-moto {
+  left: 0;
+  transition: left 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s;
+}
+.in-view .distance-moto,
+.reveal.in-view .distance-moto {
+  left: calc(var(--moto-pos) - 14px);
+}
