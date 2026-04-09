@@ -31,7 +31,6 @@ const routes = await getCollection('routes', ({ data }) => data.published);
       duration={route.data.durationEn}
       difficulty={route.data.difficulty}
       difficultyLabel={t.route.difficulty[route.data.difficulty]}
-      coverImage={route.data.coverImage}
       mapThumbnail={route.data.mapThumbnail}
       dates={route.data.dates}
       index={i}

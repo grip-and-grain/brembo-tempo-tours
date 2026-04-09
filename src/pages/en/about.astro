@@ -27,17 +27,39 @@ const t = useTranslations(lang);
   <!-- Body -->
   <section class="bg-brand-dark px-6 md:px-20 py-16 md:py-24">
     <div class="max-w-[720px]">
-      <p class="text-[1.15rem] text-white/75 leading-[1.85] mb-8">
-        Brembo Tempo Tours is built by a rider, for riders. We don't run tourist routes — we ride the roads locals keep to themselves. Östergötland's curves, passes and viewpoints, guided by someone who rides them every season.
+      <h2 class="font-display text-[1.5rem] md:text-[2rem] font-bold text-white mb-6">Where technical perfection meets pure riding joy</h2>
+      <p class="text-[1.05rem] text-white/70 leading-[1.85] mb-8">
+        Brembo Tempo organises motorcycle tours for riders who have outgrown the usual group rides and want something more demanding. We focus on active riding, technical skill, and a pace that demands both focus and experience. Our routes cover 250–350 km per day through Sweden's most hidden curve paradises — from technical forest roads and deep ravines to open coastal stretches with minimal traffic.
       </p>
-      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-8">
-        We're a small group — max 8 riders per tour — and that's not by accident. It's about quality over quantity. About actually getting to know the people you ride with. About being able to stop at a viewpoint without a column of 30 bikes waiting behind you.
+
+      <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-6 mt-12">
+        <div class="w-6 h-px bg-brand-gold"></div>Who we ride with
+      </div>
+      <p class="text-[0.95rem] text-white/50 leading-[1.9] mb-8">
+        We cater exclusively to advanced riders who prefer sportbikes or fast nakeds over cruisers. Our participants:
       </p>
-      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-8">
-        Every route is handpicked and ridden hundreds of times. We know where the road surface is perfect, where there's a corner that makes you forget everything else, and where the best coffee stop is along the way.
-      </p>
-      <p class="text-[0.95rem] text-white/45 leading-[1.9] mb-16">
-        No payment at signup. No requirements on bike type. Just great roads, great people, and Östergötland like you've never seen it.
+
+      <div class="space-y-6 mb-16">
+        <div class="border-l-2 border-brand-gold/30 pl-5">
+          <div class="text-[0.95rem] font-semibold text-white/80 mb-1">Master the corners</div>
+          <p class="text-[0.88rem] text-white/45 leading-relaxed">You know how to hold a consistent line and thrive at high lean angles.</p>
+        </div>
+        <div class="border-l-2 border-brand-gold/30 pl-5">
+          <div class="text-[0.95rem] font-semibold text-white/80 mb-1">Seek the pace</div>
+          <p class="text-[0.88rem] text-white/45 leading-relaxed">You want to ride efficiently and flow with the road without unnecessary stops or slow miles.</p>
+        </div>
+        <div class="border-l-2 border-brand-gold/30 pl-5">
+          <div class="text-[0.95rem] font-semibold text-white/80 mb-1">Have endurance</div>
+          <p class="text-[0.88rem] text-white/45 leading-relaxed">You appreciate intense days in the saddle where the focus is on the interplay between rider, machine, and tarmac.</p>
+        </div>
+        <div class="border-l-2 border-brand-gold/30 pl-5">
+          <div class="text-[0.95rem] font-semibold text-white/80 mb-1">Value quality</div>
+          <p class="text-[0.88rem] text-white/45 leading-relaxed">You want meticulously scouted roads where every mile is chosen for its technical character.</p>
+        </div>
+      </div>
+
+      <p class="text-[1.1rem] font-display font-bold text-white/60 italic mb-16">
+        No beginners. No cruisers. Just pure, technical riding.
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-[1px] bg-white/[0.06] mb-16">
@@ -53,6 +75,29 @@ const t = useTranslations(lang);
           <div class="font-display text-[2.5rem] font-bold text-brand-gold leading-none mb-2">100%</div>
           <div class="text-[0.7rem] tracking-[0.15em] uppercase text-white/35">Guide included</div>
         </div>
+      </div>
+
+      <div class="border border-white/[0.08] p-8 md:p-10 mb-16">
+        <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-6">
+          <div class="w-6 h-px bg-brand-gold"></div>Rules & exceptions
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3 text-[0.9rem] text-white/55 leading-relaxed">
+            <span class="text-brand-gold mt-1">·</span>Minimum 3 sign-ups for the tour to run
+          </li>
+          <li class="flex items-start gap-3 text-[0.9rem] text-white/55 leading-relaxed">
+            <span class="text-brand-gold mt-1">·</span>Tours are cancelled in bad weather
+          </li>
+          <li class="flex items-start gap-3 text-[0.9rem] text-white/55 leading-relaxed">
+            <span class="text-brand-gold mt-1">·</span>Payment on-site via Swish
+          </li>
+          <li class="flex items-start gap-3 text-[0.9rem] text-white/55 leading-relaxed">
+            <span class="text-brand-gold mt-1">·</span>Valid licence and motorcycle insurance required
+          </li>
+          <li class="flex items-start gap-3 text-[0.9rem] text-white/55 leading-relaxed">
+            <span class="text-brand-gold mt-1">·</span>All riding is at your own risk
+          </li>
+        </ul>
       </div>
 
       <a href="/en/contact" class="inline-flex items-center bg-brand-gold text-black text-[0.7rem] font-bold tracking-[0.2em] uppercase px-10 py-4 hover:bg-white transition-colors">

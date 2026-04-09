@@ -2,11 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { useTranslations } from '../../i18n';
+import { fetchHeroImages } from '../../lib/drive-gallery';
 
 const lang = 'en';
 const t = useTranslations(lang);
 
 const allRoutes = await getCollection('routes', ({ data }) => data.published);
+const heroImages = await fetchHeroImages();
 
 const upcomingDates = allRoutes
   .flatMap(r => r.data.dates.map(d => ({ ...d, routeTitle: r.data.titleEn, routeSlug: r.data.slug })))
@@ -33,15 +35,19 @@ const tickerItems = [
   <!-- Hero -->
   <section class="relative h-screen min-h-[600px] md:min-h-[700px] overflow-hidden">
     <div class="absolute inset-0 bg-brand-dark"></div>
-    <img src="/images/main_page_2.jpg" alt="" class="absolute top-0 h-full w-auto hidden md:block" style="right: -10%" />
-    <div class="absolute inset-0 md:hidden bg-cover bg-center" style="background-image: url('/images/main_page_2.jpg'); filter: brightness(0.3)"></div>
-    <div class="absolute inset-0 hidden md:block" style="background: linear-gradient(to right, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.62) 48%, rgba(0,0,0,0.06) 100%)"></div>
+    {heroImages.map((img, i) => (
+      <img src={img.full} alt="" class:list={['hero-slide absolute top-0 h-full w-auto hidden md:block object-cover', i === 0 ? 'opacity-100' : 'opacity-0']} style="right: -10%" data-slide={i} />
+    ))}
+    {heroImages.length > 0 && (
+      <div class="absolute inset-0 md:hidden bg-cover bg-center hero-slide-mobile" style={`background-image: url('${heroImages[0].full}'); filter: brightness(0.3)`}></div>
+    )}
+    <div class="absolute inset-0 hidden md:block" style="background: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.06) 100%)"></div>
     <div class="relative z-10 h-full flex flex-col justify-end px-6 pb-16 md:px-20 md:pb-20">
       <div class="hero-reveal flex items-center gap-4 mb-6">
         <div class="w-10 h-px bg-brand-gold"></div>
         <span class="text-[0.65rem] tracking-[0.25em] uppercase text-brand-gold">{t.home.region}</span>
       </div>
-      <h1 class="font-display font-black leading-[0.92] tracking-tight mb-8" style="font-size: clamp(3rem, 10vw, 7rem)">
+      <h1 class="font-display font-black leading-[0.92] tracking-tight mb-8" style="font-size: clamp(2.5rem, 7vw, 7rem)">
         <span class="block overflow-hidden"><span class="hero-word hero-reveal" style="--d:0.1s">{t.home.heroTitle1}</span></span>
         <span class="block overflow-hidden"><span class="hero-word hero-reveal" style="--d:0.28s">{t.home.heroTitle2}</span></span>
         <span class="block overflow-hidden"><span class="hero-word hero-reveal italic text-brand-gold" style="--d:0.48s">{t.home.heroTitleEm}</span></span>
@@ -184,7 +190,22 @@ const tickerItems = [
     to { opacity: 1; transform: translateY(0); }
   }
   .hero-word { display: inline-block; }
+  .hero-slide { transition: opacity 1.5s ease-in-out; }
 </style>
+
+<script define:vars={{ heroImageUrls: heroImages.map(i => i.full) }}>
+  const slides = document.querySelectorAll('.hero-slide[data-slide]');
+  const mobile = document.querySelector('.hero-slide-mobile');
+  if (slides.length > 1) {
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.replace('opacity-100', 'opacity-0');
+      current = (current + 1) % slides.length;
+      slides[current].classList.replace('opacity-0', 'opacity-100');
+      if (mobile) mobile.style.backgroundImage = `url('${heroImageUrls[current]}')`;
+    }, 5000);
+  }
+</script>
 
 <script define:vars={{ tickerItems }}>
   import('@chenglou/pretext').then(({ prepare, layoutWithLines }) => {

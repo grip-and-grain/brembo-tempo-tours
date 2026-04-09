@@ -45,15 +45,7 @@ export async function fetchRoutes() {
     if (r.published?.toUpperCase() !== 'TRUE') continue;
 
     // Download images from Drive
-    const coverImage = await downloadDriveImage(r.coverImage);
     const mapThumbnail = await downloadDriveImage(r.mapThumbnail);
-    const galleryLinks = splitSemicolon(r.gallery);
-    const gallery = [];
-    for (const link of galleryLinks) {
-      const local = await downloadDriveImage(link);
-      if (local) gallery.push(local);
-    }
-
     routes.push({
       id: r.slug,
       slug: r.slug,
@@ -64,17 +56,13 @@ export async function fetchRoutes() {
       distance: parseInt(r.distance, 10),
       duration: r.duration,
       durationEn: r.durationEn,
-      difficulty: r.difficulty,
-      difficultyEn: r.difficultyEn,
+      difficulty: r.difficulty.toLowerCase(),
+      difficultyEn: r.difficultyEn.toLowerCase(),
       region: r.region || 'Östergötland',
-      coverImage: coverImage || '/images/map-braviken-rundan.jpeg',
       mapThumbnail: mapThumbnail || '',
-      gallery,
       highlights: splitSemicolon(r.highlights),
       dates: datesBySlug.get(r.slug) || [],
       published: true,
-      bodySv: r.bodySv || '',
-      bodyEn: r.bodyEn || '',
     });
   }
 

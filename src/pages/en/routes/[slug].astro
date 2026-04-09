@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 const { route } = Astro.props;
 const lang = 'en';
 const t = useTranslations(lang);
-const bodyParagraphs = route.data.bodyEn.split('||').map(p => p.trim()).filter(Boolean);
+const bodyParagraphs = route.data.descriptionEn.split('||').map(p => p.trim()).filter(Boolean);
 
 const diffClass = {
   lätt: 'bg-green-500/10 text-green-400 border border-green-500/25',
@@ -75,21 +75,6 @@ const diffClass = {
           ))}
         </div>
       </div>
-
-      {route.data.gallery.length > 0 && (
-        <div class="mb-14">
-          <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
-            <div class="w-6 h-px bg-brand-gold"></div>{t.route.gallery}
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
-            {route.data.gallery.map((img) => (
-              <div class="overflow-hidden aspect-[4/3]">
-                <img src={img} alt="" class="w-full h-full object-cover brightness-[0.8] hover:brightness-100 hover:scale-[1.05] transition-all duration-500" />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {route.data.mapThumbnail && (
         <div class="mb-14">

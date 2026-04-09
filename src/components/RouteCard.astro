@@ -7,7 +7,6 @@ interface Props {
   duration: string;
   difficulty: 'lätt' | 'medel' | 'krävande';
   difficultyLabel: string;
-  coverImage: string;
   mapThumbnail?: string;
   dates: { date: string; spots: number; spotsLeft: number }[];
   index: number;
@@ -15,7 +14,7 @@ interface Props {
   readMore: string;
 }
 
-const { slug, title, description, distance, duration, difficulty, difficultyLabel, coverImage, mapThumbnail, dates, index, lang, readMore } = Astro.props;
+const { slug, title, description, distance, duration, difficulty, difficultyLabel, mapThumbnail, dates, index, lang, readMore } = Astro.props;
 
 const href = lang === 'en' ? `/en/routes/${slug}` : `/routes/${slug}`;
 

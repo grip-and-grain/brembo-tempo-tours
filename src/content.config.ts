@@ -23,14 +23,10 @@ const routes = defineCollection({
     difficulty: z.enum(['lätt', 'medel', 'krävande']),
     difficultyEn: z.enum(['easy', 'moderate', 'demanding']),
     region: z.string().default('Östergötland'),
-    coverImage: z.string(),
     mapThumbnail: z.string().optional(),
-    gallery: z.array(z.string()),
     highlights: z.array(z.string()),
     dates: z.array(tourDateSchema),
     published: z.boolean().default(true),
-    bodySv: z.string(),
-    bodyEn: z.string(),
   }),
 });
 
