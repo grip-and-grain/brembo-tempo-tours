@@ -1,12 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import VideoCard from '../components/VideoCard.astro';
 import { useTranslations } from '../i18n';
 import { fetchGalleryImages } from '../lib/drive-gallery';
+import { fetchVideos } from '../lib/sheets';
 
 const lang = 'sv';
 const t = useTranslations(lang);
 
-const images = await fetchGalleryImages();
+const [images, videoData] = await Promise.all([fetchGalleryImages(), fetchVideos()]);
+const { videos, playlists } = videoData;
 ---
 
 <BaseLayout title={t.gallery.eyebrow} lang={lang} activeNav="gallery">
@@ -17,6 +20,45 @@ const images = await fetchGalleryImages();
       <span class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold">{t.gallery.eyebrow}</span>
     </div>
     <h1 class="font-display text-[2.5rem] md:text-[4rem] font-bold mb-12 md:mb-16">{t.gallery.title}</h1>
+
+    {videos.length > 0 && (
+      <div class="mb-20">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold/70">{t.gallery.videos}</h2>
+          <div class="flex-1 h-px bg-brand-gold/20"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {videos.map((v) => (
+            <VideoCard videoId={v.videoId} title={v.title} thumbnail={v.thumbnail} />
+          ))}
+        </div>
+        {playlists.length > 0 && (
+          <div class="flex flex-wrap gap-4 mt-8">
+            {playlists.map((pl) => (
+              <a
+                href={pl.url}
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-3 px-6 py-3 text-[0.7rem] font-semibold tracking-[0.2em] uppercase border border-brand-gold/30 text-brand-gold hover:bg-brand-gold/10 transition-colors"
+              >
+                <svg class="w-5 h-3.5 shrink-0" viewBox="0 0 68 48" fill="none">
+                  <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/>
+                  <path d="M45 24L27 14v20" fill="white"/>
+                </svg>
+                {pl.title ? `${t.gallery.moreVideosNamed} ${pl.title} →` : t.gallery.moreVideos}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    )}
+
+    {images.length > 0 && videos.length > 0 && (
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="text-[0.65rem] font-semibold tracking-[0.25em] uppercase text-brand-gold/70">{t.gallery.images}</h2>
+        <div class="flex-1 h-px bg-brand-gold/20"></div>
+      </div>
+    )}
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
       {images.map((img) => (
@@ -31,8 +73,8 @@ const images = await fetchGalleryImages();
       ))}
     </div>
 
-    {images.length === 0 && (
-      <p class="text-white/35 text-center py-20">Inga bilder ännu.</p>
+    {images.length === 0 && videos.length === 0 && (
+      <p class="text-white/35 text-center py-20">{t.gallery.empty}</p>
     )}
   </section>
 

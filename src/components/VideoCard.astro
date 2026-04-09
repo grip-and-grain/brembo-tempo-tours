@@ -1,0 +1,46 @@
+---
+interface Props {
+  videoId: string;
+  title: string;
+  thumbnail: string;
+}
+
+const { videoId, title, thumbnail } = Astro.props;
+---
+
+<div>
+  <div
+    class="video-card group relative aspect-video overflow-hidden cursor-pointer"
+    data-video-id={videoId}
+  >
+    <img
+      src={thumbnail}
+      alt={title || 'Video'}
+      loading="lazy"
+      class="w-full h-full object-cover brightness-[0.8] group-hover:brightness-100 group-hover:scale-[1.05] transition-all duration-500"
+    />
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+      <svg class="w-16 h-16 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300 drop-shadow-lg" viewBox="0 0 68 48" fill="none">
+        <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/>
+        <path d="M45 24L27 14v20" fill="white"/>
+      </svg>
+    </div>
+  </div>
+  {title && <p class="text-[0.8rem] text-white/50 mt-2">{title}</p>}
+</div>
+
+<script>
+  document.querySelectorAll('.video-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const videoId = (card as HTMLElement).dataset.videoId;
+      if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId ?? '')) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 w-full h-full';
+      card.replaceChildren(iframe);
+      card.classList.remove('cursor-pointer');
+    }, { once: true });
+  });
+</script>

@@ -94,6 +94,11 @@ export const en: Translations = {
   gallery: {
     eyebrow: 'Gallery',
     title: 'From our tours',
+    videos: 'Videos',
+    images: 'Images',
+    moreVideos: 'More on YouTube →',
+    moreVideosNamed: 'More on YouTube:',
+    empty: 'No images yet.',
   },
   footer: {
     copy: '© 2026 · Brembo Tempo · Östergötland, Sweden',

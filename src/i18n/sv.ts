@@ -92,6 +92,11 @@ export const sv = {
   gallery: {
     eyebrow: 'Bildgalleri',
     title: 'Från våra turer',
+    videos: 'Videor',
+    images: 'Bilder',
+    moreVideos: 'Mer på YouTube →',
+    moreVideosNamed: 'Mer på YouTube:',
+    empty: 'Inga bilder ännu.',
   },
   footer: {
     copy: '© 2026 · Brembo Tempo · Östergötland, Sverige',

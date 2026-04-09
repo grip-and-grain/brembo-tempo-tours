@@ -21,6 +21,78 @@ function splitSemicolon(val: string): string[] {
   return val.split(';').map(s => s.trim()).filter(Boolean);
 }
 
+export interface Video {
+  videoId: string;
+  title: string;
+  thumbnail: string;
+}
+
+function extractYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match?.[1] ?? null;
+}
+
+async function fetchYouTubeTitle(videoId: string): Promise<string> {
+  try {
+    const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+    const res = await fetch(url);
+    if (!res.ok) return '';
+    const data = await res.json();
+    return data.title ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function isSafeUrl(raw: string): boolean {
+  try {
+    const { protocol } = new URL(raw);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+export interface Playlist {
+  url: string;
+  title: string;
+}
+
+export interface VideoData {
+  videos: Video[];
+  playlists: Playlist[];
+}
+
+export async function fetchVideos(): Promise<VideoData> {
+  const rows = await fetchCsv('Videor');
+
+  const published = rows.filter((r) => !r.published || r.published.toUpperCase() === 'TRUE');
+
+  const playlists = published
+    .filter((r) => r.isPlaylist?.toUpperCase() === 'TRUE' && r.url?.trim())
+    .map((r) => ({ url: r.url.trim(), title: r.title?.trim() || '' }))
+    .filter((pl) => isSafeUrl(pl.url));
+
+  const parsed = published
+    .filter((r) => r.isPlaylist?.toUpperCase() !== 'TRUE')
+    .map((r) => {
+      const videoId = extractYouTubeId(r.url ?? '');
+      if (!videoId) return null;
+      return { videoId, sheetTitle: r.title?.trim() || '' };
+    })
+    .filter((v): v is { videoId: string; sheetTitle: string } => v !== null);
+
+  const videos = await Promise.all(
+    parsed.map(async ({ videoId, sheetTitle }) => ({
+      videoId,
+      title: sheetTitle || await fetchYouTubeTitle(videoId),
+      thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    })),
+  );
+
+  return { videos, playlists };
+}
+
 export async function fetchRoutes() {
   const [rawRoutes, rawDates] = await Promise.all([
     fetchCsv('Rutter'),
