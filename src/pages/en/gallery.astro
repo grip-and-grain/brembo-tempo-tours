@@ -1,9 +1,13 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoCard from '../../components/VideoCard.astro';
 import { useTranslations } from '../../i18n';
 import { fetchGalleryImages } from '../../lib/drive-gallery';
 import { fetchVideos } from '../../lib/sheets';
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
 
 const lang = 'en';
 const t = useTranslations(lang);
@@ -38,7 +42,7 @@ const { videos, playlists } = videoData;
               <a
                 href={pl.url}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 class="inline-flex items-center gap-3 px-6 py-3 text-[0.7rem] font-semibold tracking-[0.2em] uppercase border border-brand-gold/30 text-brand-gold hover:bg-brand-gold/10 transition-colors"
               >
                 <svg class="w-5 h-3.5 shrink-0" viewBox="0 0 68 48" fill="none">
@@ -62,7 +66,7 @@ const { videos, playlists } = videoData;
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
       {images.map((img) => (
-        <a href={img.full} target="_blank" rel="noopener" class="group overflow-hidden aspect-[4/3]">
+        <a href={img.full} target="_blank" rel="noopener noreferrer" class="group overflow-hidden aspect-[4/3]">
           <img
             src={img.thumbnail}
             alt={img.name}

@@ -41,6 +41,8 @@ export const en: Translations = {
     distanceLabel: 'Distance',
     durationLabel: 'Duration',
     difficultyLabel: 'Difficulty',
+    priceLabel: 'Price',
+    priceNote: 'Food/coffee/hotel/fuel not included.',
     regionLabel: 'Region',
     upcomingDates: 'Upcoming dates',
     backToRoutes: '← All routes',

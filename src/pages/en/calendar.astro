@@ -1,12 +1,16 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { fetchRoutes } from '../../lib/sheets';
 import { useTranslations } from '../../i18n';
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
 
 const lang = 'en';
 const t = useTranslations(lang);
 
-const allRoutes = await getCollection('routes', ({ data }) => data.published);
+const allRoutes = await fetchRoutes();
 
 const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -40,7 +44,7 @@ type ProcessedDate = {
 };
 
 const allDates: ProcessedDate[] = allRoutes
-  .flatMap(r => r.data.dates.map(d => {
+  .flatMap(r => r.dates.map(d => {
     const date = new Date(d.date);
     return {
       dateStr: d.date,
@@ -48,13 +52,13 @@ const allDates: ProcessedDate[] = allRoutes
       weekday: weekdays[date.getDay()],
       spots: d.spots,
       spotsLeft: d.spotsLeft,
-      routeTitle: r.data.titleEn,
-      routeSlug: r.data.slug,
-      difficulty: r.data.difficulty,
-      diffLabel: diffLabel[r.data.difficulty],
-      diffColor: diffColor[r.data.difficulty],
-      distance: r.data.distance,
-      duration: r.data.durationEn,
+      routeTitle: r.titleEn,
+      routeSlug: r.slug,
+      difficulty: r.difficulty,
+      diffLabel: diffLabel[r.difficulty],
+      diffColor: diffColor[r.difficulty],
+      distance: r.distance,
+      duration: r.durationEn,
       isSoldOut: d.spotsLeft === 0,
       spotsColorClass: spotsColor(d.spotsLeft),
       monthKey: d.date.slice(0, 7),

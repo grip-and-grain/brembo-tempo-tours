@@ -55,15 +55,17 @@ const t = useTranslations(lang);
 </BaseLayout>
 
 <script>
-  // Pre-fill context from URL params
   const params = new URLSearchParams(window.location.search);
   const route = params.get('route');
   const date = params.get('date');
 
+  const SLUG_RE = /^[a-z0-9-]+$/;
+  const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
   const routeCtx = document.getElementById('contact-context-route');
   const generalCtx = document.getElementById('contact-context-general');
 
-  if (route) {
+  if (route && SLUG_RE.test(route)) {
     routeCtx?.classList.remove('hidden');
     generalCtx?.classList.add('hidden');
 
@@ -76,14 +78,16 @@ const t = useTranslations(lang);
     if (routeInput) routeInput.value = route;
   }
 
-  if (date) {
+  if (date && DATE_RE.test(date)) {
     const d = new Date(date);
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const dateEl = document.getElementById('context-date');
-    if (dateEl) dateEl.textContent = `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    if (!isNaN(d.getTime())) {
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const dateEl = document.getElementById('context-date');
+      if (dateEl) dateEl.textContent = `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 
-    const dateInput = document.querySelector('input[name="tour-date"]') as HTMLInputElement;
-    if (dateInput) dateInput.value = date;
+      const dateInput = document.querySelector('input[name="tour-date"]') as HTMLInputElement;
+      if (dateInput) dateInput.value = date;
+    }
   }
 </script>

@@ -39,6 +39,8 @@ export const sv = {
     distanceLabel: 'Distans',
     durationLabel: 'Tid',
     difficultyLabel: 'Svårighetsgrad',
+    priceLabel: 'Pris',
+    priceNote: 'Mat/fika/hotell/bensin ingår ej i priset.',
     regionLabel: 'Region',
     upcomingDates: 'Kommande datum',
     backToRoutes: '← Alla rutter',

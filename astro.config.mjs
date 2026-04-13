@@ -2,9 +2,11 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import netlify from '@astrojs/netlify';
 
 export default defineConfig({
   site: 'https://brembo-tempo-tours.netlify.app',
+  adapter: netlify(),
   vite: {
     plugins: [tailwindcss()],
   },
@@ -14,6 +16,7 @@ export default defineConfig({
     locales: ['sv', 'en'],
     routing: {
       prefixDefaultLocale: false,
+      redirectToDefaultLocale: false,
     },
   },
 });

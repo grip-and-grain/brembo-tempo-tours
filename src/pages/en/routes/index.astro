@@ -1,12 +1,16 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RouteCard from '../../../components/RouteCard.astro';
-import { getCollection } from 'astro:content';
+import { fetchRoutes } from '../../../lib/sheets';
 import { useTranslations } from '../../../i18n';
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
 
 const lang = 'en';
 const t = useTranslations(lang);
-const routes = await getCollection('routes', ({ data }) => data.published);
+const routes = await fetchRoutes();
 ---
 
 <BaseLayout title={t.nav.routes} lang={lang} activeNav="routes">
@@ -24,15 +28,20 @@ const routes = await getCollection('routes', ({ data }) => data.published);
 
   {routes.map((route, i) => (
     <RouteCard
-      slug={route.data.slug}
-      title={route.data.titleEn}
-      description={route.data.descriptionEn}
-      distance={route.data.distance}
-      duration={route.data.durationEn}
-      difficulty={route.data.difficulty}
-      difficultyLabel={t.route.difficulty[route.data.difficulty]}
-      mapThumbnail={route.data.mapThumbnail}
-      dates={route.data.dates}
+      slug={route.slug}
+      title={route.titleEn}
+      description={route.descriptionEn}
+      price={route.price}
+      discount={route.discount}
+      discountedPrice={route.discountedPrice}
+      discountText={route.discountText}
+      discountTextEn={route.discountTextEn}
+      distance={route.distance}
+      duration={route.durationEn}
+      difficulty={route.difficulty}
+      difficultyLabel={t.route.difficulty[route.difficulty]}
+      mapThumbnail={route.mapThumbnail}
+      dates={route.dates}
       index={i}
       lang={lang}
       readMore={t.route.readMore}

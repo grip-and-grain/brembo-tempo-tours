@@ -1,28 +1,32 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { fetchRoutes } from '../lib/sheets';
 import { useTranslations } from '../i18n';
 import { fetchHeroImages } from '../lib/drive-gallery';
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
 
 const lang = 'sv';
 const t = useTranslations(lang);
 
-const allRoutes = await getCollection('routes', ({ data }) => data.published);
+const allRoutes = await fetchRoutes();
 const heroImages = await fetchHeroImages();
 
 const upcomingDates = allRoutes
-  .flatMap(r => r.data.dates.map(d => ({ ...d, routeTitle: r.data.title, routeSlug: r.data.slug })))
+  .flatMap(r => r.dates.map(d => ({ ...d, routeTitle: r.title, routeSlug: r.slug })))
   .filter(d => new Date(d.date) >= new Date())
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   .slice(0, 3);
 
 const monthNames = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
 
-const maxDistance = Math.max(...allRoutes.map(r => r.data.distance));
+const maxDistance = Math.max(...allRoutes.map(r => r.distance));
 
 const tickerItems = [
   t.home.region,
-  ...allRoutes.map(r => r.data.title),
+  ...allRoutes.map(r => r.title),
   `${allRoutes.length} rutter`,
   'Max 8 förare',
   '180–310 km',
@@ -83,7 +87,7 @@ const tickerItems = [
 
     <div class="space-y-0">
       {allRoutes.map((route) => (
-        <a href={`/routes/${route.data.slug}`} class="group flex items-center gap-5 md:gap-8 py-6 md:py-8 border-b border-white/[0.06] hover:border-brand-gold/30 transition-colors">
+        <a href={`/routes/${route.slug}`} class="group flex items-center gap-5 md:gap-8 py-6 md:py-8 border-b border-white/[0.06] hover:border-brand-gold/30 transition-colors">
           <!-- Motorcycle icon -->
           <svg class="w-8 h-8 md:w-10 md:h-10 text-brand-gold/60 group-hover:text-brand-gold transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="5" cy="17" r="3" />
@@ -94,25 +98,25 @@ const tickerItems = [
 
           <!-- Route name -->
           <div class="min-w-0 md:w-[260px] shrink-0">
-            <div class="font-display text-[1.2rem] md:text-[1.5rem] font-bold text-white group-hover:text-brand-gold transition-colors leading-tight truncate">{route.data.title}</div>
+            <div class="font-display text-[1.2rem] md:text-[1.5rem] font-bold text-white group-hover:text-brand-gold transition-colors leading-tight truncate">{route.title}</div>
           </div>
 
           <!-- Distance bar -->
           <div class="hidden md:block flex-1 relative h-[3px] bg-white/[0.04] rounded-full">
-            <div class="distance-bar absolute inset-y-0 left-0 bg-brand-gold/25 group-hover:bg-brand-gold/50 rounded-full transition-colors" style={`--bar-w: ${Math.round((route.data.distance / maxDistance) * 100)}%`}></div>
-            <svg class="distance-moto absolute top-1/2 -translate-y-1/2 w-7 h-7 text-brand-gold/40 group-hover:text-brand-gold transition-colors" style={`--moto-pos: ${Math.round((route.data.distance / maxDistance) * 100)}%`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <div class="distance-bar absolute inset-y-0 left-0 bg-brand-gold/25 group-hover:bg-brand-gold/50 rounded-full transition-colors" style={`--bar-w: ${Math.round((route.distance / maxDistance) * 100)}%`}></div>
+            <svg class="distance-moto absolute top-1/2 -translate-y-1/2 w-7 h-7 text-brand-gold/40 group-hover:text-brand-gold transition-colors" style={`--moto-pos: ${Math.round((route.distance / maxDistance) * 100)}%`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="5" cy="17" r="3" /><circle cx="19" cy="17" r="3" /><path d="M9 17h6" /><path d="M19 14l-2-7h-3l-1.5 4H9L7 8H5" />
             </svg>
           </div>
 
           <!-- Stats (right-aligned) -->
           <div class="shrink-0 text-right whitespace-nowrap">
-            <span class="font-display text-[1.1rem] font-bold text-white/50">{route.data.distance}</span>
+            <span class="font-display text-[1.1rem] font-bold text-white/50">{route.distance}</span>
             <span class="text-[0.6rem] tracking-[0.1em] uppercase text-white/25 ml-1">km</span>
             <span class="text-white/10 mx-2 hidden md:inline">·</span>
-            <span class="hidden md:inline text-[0.75rem] text-white/25">{route.data.duration}</span>
+            <span class="hidden md:inline text-[0.75rem] text-white/25">{route.duration}</span>
             <span class="md:hidden text-white/15 mx-1">·</span>
-            <span class="md:hidden text-[0.75rem] text-white/35">{route.data.duration}</span>
+            <span class="md:hidden text-[0.75rem] text-white/35">{route.duration}</span>
           </div>
 
           <!-- Arrow -->

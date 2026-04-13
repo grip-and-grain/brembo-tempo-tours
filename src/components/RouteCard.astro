@@ -3,6 +3,11 @@ interface Props {
   slug: string;
   title: string;
   description: string;
+  price: number;
+  discount: number;
+  discountedPrice: number;
+  discountText: string;
+  discountTextEn: string;
   distance: number;
   duration: string;
   difficulty: 'lätt' | 'medel' | 'krävande';
@@ -14,7 +19,8 @@ interface Props {
   readMore: string;
 }
 
-const { slug, title, description, distance, duration, difficulty, difficultyLabel, mapThumbnail, dates, index, lang, readMore } = Astro.props;
+const { slug, title, description, price, discount, discountedPrice, discountText, discountTextEn, distance, duration, difficulty, difficultyLabel, mapThumbnail, dates, index, lang, readMore } = Astro.props;
+const localDiscountText = lang === 'en' ? discountTextEn : discountText;
 
 const href = lang === 'en' ? `/en/routes/${slug}` : `/routes/${slug}`;
 
@@ -46,8 +52,24 @@ const months = lang === 'en' ? monthsEn : monthsSv;
       </div>
       <div>
         <span class="block font-display text-[1.4rem] font-bold text-white leading-none">{duration}</span>
-        <span class="block text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mt-1">tid</span>
+        <span class="block text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mt-1">{lang === 'en' ? 'time' : 'tid'}</span>
       </div>
+      {price > 0 && (
+        <div>
+          {discount > 0 ? (
+            <div class="flex items-baseline gap-2">
+              <span class="font-display text-[0.95rem] font-bold text-white/25 line-through leading-none">{price} kr</span>
+              <span class="font-display text-[1.4rem] font-bold text-brand-gold leading-none">{discountedPrice} kr</span>
+              <span class="text-[0.55rem] font-bold tracking-wide uppercase bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">-{discount}%</span>
+            </div>
+          ) : (
+            <span class="block font-display text-[1.4rem] font-bold text-brand-gold leading-none">{price} kr</span>
+          )}
+          <span class="block text-[0.6rem] tracking-[0.15em] uppercase text-white/30 mt-1">{lang === 'en' ? 'price' : 'pris'}</span>
+          {localDiscountText && <span class="block text-[0.55rem] text-green-400/70 mt-0.5">{localDiscountText}</span>}
+          <span class="block text-[0.55rem] text-red-400/60 mt-1">{lang === 'en' ? 'Food/coffee/hotel/fuel not included.' : 'Mat/fika/hotell/bensin ingår ej.'}</span>
+        </div>
+      )}
     </div>
     {dates.length > 0 && (
       <div class="flex flex-wrap gap-3 mb-10">

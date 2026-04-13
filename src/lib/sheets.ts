@@ -1,5 +1,4 @@
 import { parse } from 'csv-parse/sync';
-import { downloadDriveImage } from './images.js';
 
 const SHEET_ID = import.meta.env.GOOGLE_SHEET_ID;
 if (!SHEET_ID) throw new Error('Missing GOOGLE_SHEET_ID env var');
@@ -16,9 +15,46 @@ async function fetchCsv(tab: string): Promise<Record<string, string>[]> {
   return parse(text, { columns: true, skip_empty_lines: true, trim: true });
 }
 
+function driveCdnUrl(driveUrl: string): string {
+  if (!driveUrl?.trim()) return '';
+  const match = driveUrl.trim().match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) return '';
+  return `https://lh3.googleusercontent.com/d/${match[1]}=w800`;
+}
+
 function splitSemicolon(val: string): string[] {
   if (!val?.trim()) return [];
   return val.split(';').map(s => s.trim()).filter(Boolean);
+}
+
+export interface TourDate {
+  date: string;
+  spots: number;
+  spotsLeft: number;
+}
+
+export interface Route {
+  id: string;
+  slug: string;
+  title: string;
+  titleEn: string;
+  description: string;
+  descriptionEn: string;
+  distance: number;
+  duration: string;
+  durationEn: string;
+  difficulty: string;
+  difficultyEn: string;
+  price: number;
+  discount: number;
+  discountedPrice: number;
+  discountText: string;
+  discountTextEn: string;
+  region: string;
+  mapThumbnail: string;
+  highlights: string[];
+  dates: TourDate[];
+  published: boolean;
 }
 
 export interface Video {
@@ -36,10 +72,14 @@ async function fetchYouTubeTitle(videoId: string): Promise<string> {
   try {
     const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
     const res = await fetch(url);
-    if (!res.ok) return '';
+    if (!res.ok) {
+      console.warn(`YouTube oEmbed failed for ${videoId}: ${res.status}`);
+      return '';
+    }
     const data = await res.json();
     return data.title ?? '';
-  } catch {
+  } catch (err) {
+    console.warn(`YouTube oEmbed error for ${videoId}:`, err);
     return '';
   }
 }
@@ -66,7 +106,7 @@ export interface VideoData {
 export async function fetchVideos(): Promise<VideoData> {
   const rows = await fetchCsv('Videor');
 
-  const published = rows.filter((r) => !r.published || r.published.toUpperCase() === 'TRUE');
+  const published = rows.filter((r) => r.published?.toUpperCase() === 'TRUE');
 
   const playlists = published
     .filter((r) => r.isPlaylist?.toUpperCase() === 'TRUE' && r.url?.trim())
@@ -93,7 +133,7 @@ export async function fetchVideos(): Promise<VideoData> {
   return { videos, playlists };
 }
 
-export async function fetchRoutes() {
+export async function fetchRoutes(): Promise<Route[]> {
   const [rawRoutes, rawDates] = await Promise.all([
     fetchCsv('Rutter'),
     fetchCsv('Datum'),
@@ -116,8 +156,9 @@ export async function fetchRoutes() {
   for (const r of rawRoutes) {
     if (r.published?.toUpperCase() !== 'TRUE') continue;
 
-    // Download images from Drive
-    const mapThumbnail = await downloadDriveImage(r.mapThumbnail);
+    const mapThumbnail = driveCdnUrl(r.mapThumbnail);
+    const price = parseInt(r.price, 10) || 0;
+    const discount = parseInt((r.discount ?? '').replace('%', ''), 10) || 0;
     routes.push({
       id: r.slug,
       slug: r.slug,
@@ -125,6 +166,11 @@ export async function fetchRoutes() {
       titleEn: r.titleEn,
       description: r.description,
       descriptionEn: r.descriptionEn,
+      price,
+      discount,
+      discountedPrice: discount > 0 ? Math.round(price * (1 - discount / 100)) : price,
+      discountText: r.discountText?.trim() || '',
+      discountTextEn: r.discountTextEn?.trim() || '',
       distance: parseInt(r.distance, 10),
       duration: r.duration,
       durationEn: r.durationEn,
