@@ -34,11 +34,21 @@ async function fetchDriveImages(folderId: string): Promise<DriveImage[]> {
 export async function fetchGalleryImages(): Promise<DriveImage[]> {
   const folderId = import.meta.env.GOOGLE_DRIVE_GALLERY_FOLDER_ID;
   if (!folderId) throw new Error('Missing GOOGLE_DRIVE_GALLERY_FOLDER_ID env var');
-  return fetchDriveImages(folderId);
+  try {
+    return await fetchDriveImages(folderId);
+  } catch (err) {
+    console.error('Failed to fetch gallery images:', err);
+    return [];
+  }
 }
 
 export async function fetchHeroImages(): Promise<DriveImage[]> {
   const folderId = import.meta.env.GOOGLE_DRIVE_HERO_FOLDER_ID;
   if (!folderId) throw new Error('Missing GOOGLE_DRIVE_HERO_FOLDER_ID env var');
-  return fetchDriveImages(folderId);
+  try {
+    return await fetchDriveImages(folderId);
+  } catch (err) {
+    console.error('Failed to fetch hero images:', err);
+    return [];
+  }
 }

@@ -94,14 +94,16 @@ const diffClass = {
         </div>
       </div>
 
-      <div class="mb-14">
-        <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
-          <div class="w-6 h-px bg-brand-gold"></div>{t.route.map}
+      {route.mapThumbnail && (
+        <div class="mb-14">
+          <div class="flex items-center gap-3 text-[0.6rem] font-bold tracking-[0.25em] uppercase text-brand-gold mb-5">
+            <div class="w-6 h-px bg-brand-gold"></div>{t.route.map}
+          </div>
+          <div class="w-full md:w-1/2">
+            <img src={route.mapThumbnail} alt={`Karta: ${route.title}`} class="w-full h-auto rounded border border-white/10" />
+          </div>
         </div>
-        <div class="w-full md:w-1/2">
-          <img src={route.mapThumbnail} alt={`Karta: ${route.title}`} class="w-full h-auto rounded border border-white/10" />
-        </div>
-      </div>
+      )}
 
     </div>
 

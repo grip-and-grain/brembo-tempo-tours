@@ -104,7 +104,13 @@ export interface VideoData {
 }
 
 export async function fetchVideos(): Promise<VideoData> {
-  const rows = await fetchCsv('Videor');
+  let rows: Record<string, string>[];
+  try {
+    rows = await fetchCsv('Videor');
+  } catch (err) {
+    console.error('Failed to fetch videos:', err);
+    return { videos: [], playlists: [] };
+  }
 
   const published = rows.filter((r) => r.published?.toUpperCase() === 'TRUE');
 
@@ -134,10 +140,17 @@ export async function fetchVideos(): Promise<VideoData> {
 }
 
 export async function fetchRoutes(): Promise<Route[]> {
-  const [rawRoutes, rawDates] = await Promise.all([
-    fetchCsv('Rutter'),
-    fetchCsv('Datum'),
-  ]);
+  let rawRoutes: Record<string, string>[];
+  let rawDates: Record<string, string>[];
+  try {
+    [rawRoutes, rawDates] = await Promise.all([
+      fetchCsv('Rutter'),
+      fetchCsv('Datum'),
+    ]);
+  } catch (err) {
+    console.error('Failed to fetch routes:', err);
+    return [];
+  }
 
   // Group dates by routeSlug
   const datesBySlug = new Map<string, { date: string; spots: number; spotsLeft: number }[]>();
@@ -174,8 +187,8 @@ export async function fetchRoutes(): Promise<Route[]> {
       distance: parseInt(r.distance, 10),
       duration: r.duration,
       durationEn: r.durationEn,
-      difficulty: r.difficulty.toLowerCase(),
-      difficultyEn: r.difficultyEn.toLowerCase(),
+      difficulty: (r.difficulty ?? '').toLowerCase(),
+      difficultyEn: (r.difficultyEn ?? '').toLowerCase(),
       region: r.region || 'Östergötland',
       mapThumbnail: mapThumbnail || '',
       highlights: splitSemicolon(r.highlights),
